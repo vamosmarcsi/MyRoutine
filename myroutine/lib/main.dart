@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:myroutine/screens/wrapper.dart';
+import 'models/myuser.dart';
+import 'package:provider/provider.dart';
+import 'package:myroutine/services/auth.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -13,33 +17,14 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Flutter Demo',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
+    return StreamProvider<MyUser?>.value(
+        catchError: (_, __) => null,
+      value: AuthService().user,
+      initialData: null,
+      child: const MaterialApp(
+        home: Wrapper(),
       ),
-      home: const MyHomePage(title: 'MyRoutine Home Page'),
     );
   }
 }
 
-class MyHomePage extends StatefulWidget {
-  const MyHomePage({Key? key, required this.title}) : super(key: key);
-
-  final String title;
-
-  @override
-  State<MyHomePage> createState() => _MyHomePageState();
-}
-
-class _MyHomePageState extends State<MyHomePage> {
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(widget.title),
-      ),
-      );
-  }
-}
