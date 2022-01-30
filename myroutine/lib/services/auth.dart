@@ -1,5 +1,8 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:myroutine/enums/skin_problems.dart';
+import 'package:myroutine/enums/skin_types.dart';
 import 'package:myroutine/models/myuser.dart';
+import 'package:myroutine/services/database.dart';
 
 class AuthService {
   final FirebaseAuth _auth = FirebaseAuth.instance;
@@ -10,7 +13,6 @@ class AuthService {
     return MyUser(uid: user.uid);
   }
 
-  //
   Stream<MyUser?> get user {
     return _auth
         .authStateChanges()
@@ -32,8 +34,8 @@ class AuthService {
   //sign-in with email and pw
   Future signInWithEmailAndPw(String email, String pw) async {
     try {
-      UserCredential res = await _auth.signInWithEmailAndPassword(
-          email: email, password: pw);
+      UserCredential res =
+          await _auth.signInWithEmailAndPassword(email: email, password: pw);
       User? user = res.user;
       return _userFromFirebaseUser(user!);
     } catch (err) {
@@ -48,7 +50,9 @@ class AuthService {
       UserCredential res = await _auth.createUserWithEmailAndPassword(
           email: email, password: pw);
       User? user = res.user;
-      return _userFromFirebaseUser(user!);
+      await DatabaseService(uid: user!.uid)
+      .updateUserData(SkinProblems.notSpecified, SkinType.notSpecified);
+      return _userFromFirebaseUser(user);
     } catch (err) {
       print(err.toString());
       return null;
