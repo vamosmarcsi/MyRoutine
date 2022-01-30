@@ -1,5 +1,3 @@
-// ignore_for_file: unused_field, prefer_const_constructors, avoid_print
-
 import 'package:flutter/material.dart';
 import 'package:myroutine/services/auth.dart';
 import 'package:myroutine/shared/constants.dart';

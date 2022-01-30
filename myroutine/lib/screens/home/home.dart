@@ -11,7 +11,7 @@ class Home extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     //beállítások
-    void _showSettingsPanel() {
+    /*void _showSettingsPanel() {
       showModalBottomSheet(
           context: context,
           builder: (context) {
@@ -20,7 +20,7 @@ class Home extends StatelessWidget {
               child: SettingsForm()
             );
           });
-    }
+    }*/
 
     return Scaffold(
       backgroundColor: Colors.deepPurple[100],
