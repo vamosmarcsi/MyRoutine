@@ -16,6 +16,6 @@ class UserData {
   final String userType; //admin vagy mezei felhasználó
   final String DOB;
 
-  UserData({required this.likedProducts, required this.userType, required this.DOB, 
-      required this.uid, required this.skinProblem, required this.skinType});
+  UserData({required this.likedProducts, required this.userType, required this.DOB,
+    required this.uid, required this.skinProblem, required this.skinType});
 }

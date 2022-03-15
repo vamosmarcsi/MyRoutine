@@ -1,4 +1,6 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:myroutine/services/auth.dart';
 import 'package:myroutine/shared/constants.dart';
 import 'package:myroutine/shared/loading.dart';
@@ -6,8 +8,8 @@ import 'package:myroutine/shared/loading.dart';
 class SignIn extends StatefulWidget {
   //const SignIn({Key? key}) : super(key: key);
 
-  final Function toggleView;
-  const SignIn({Key? key, required this.toggleView}) : super(key: key);
+  //final Function toggleView;
+  const SignIn({Key? key,  /*required this.toggleView*/}) : super(key: key);
 
   @override
   _SignInState createState() => _SignInState();
@@ -27,78 +29,113 @@ class _SignInState extends State<SignIn> {
     return loading
         ? const Loading()
         : Scaffold(
-            backgroundColor: Colors.deepPurple[200],
-            appBar: AppBar(
-              backgroundColor: Colors.deepPurple,
-              elevation: 0.0,
-              title: const Text('Sign-in'),
-              actions: <Widget>[
-                TextButton.icon(
-                  icon: const Icon(Icons.person),
-                  label: const Text('Register'),
-                  onPressed: () {
-                    widget.toggleView();
-                  },
-                )
-              ],
-            ),
-            body: Stack(
-              children: [
-                Align(
-                    alignment: Alignment.center,
-                    child: SingleChildScrollView(
-                      child: Container(
-                          padding: const EdgeInsets.symmetric(
-                              vertical: 20.0, horizontal: 50.0),
+        resizeToAvoidBottomInset: false,
+        backgroundColor: Colors.brown[100],
+        appBar: AppBar(
+          backgroundColor: Colors.brown[100],
+          elevation: 0.0,
+          leading: IconButton(
+              onPressed: () {
+                Navigator.pop(context);
+              },
+              icon: Icon(Icons.arrow_back_ios,
+                  size: 20, color: Colors.black)),
+        ),
+        body: Container(
+            height: MediaQuery.of(context).size.height,
+            width: double.infinity,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: <Widget>[
+                Column(
+                  children: <Widget>[
+                    Text(
+                      "Bejelentkezés",
+                      style: GoogleFonts.comforter(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 40,
+                          color: myPrimaryColor),
+                    ),
+                  ],
+                ),
+                Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 40),
+                  child: Column(
+                    children: <Widget>[
+                      Container(
                           child: Form(
                             key: _formKey,
                             child: Column(children: <Widget>[
                               const SizedBox(height: 20.0),
+                              //email
                               TextFormField(
                                 decoration: textInputDecoration.copyWith(
-                                    hintText: 'Email'),
-                                validator: (val) =>
-                                    val!.isEmpty ? 'Enter an email' : null,
+                                    hintText: 'Email cím',
+                                    prefixIcon: Icon(Icons.email, color: myPrimaryColor)
+                                ),
+                                validator: (val) => val!.isEmpty
+                                    ? 'Kérlek, add meg az email címed!'
+                                    : null,
                                 onChanged: (val) {
                                   setState(() => email = val);
                                 },
                               ),
                               const SizedBox(height: 20.0),
+                              //jelszó
                               TextFormField(
+                                  cursorColor: myPrimaryLightColor,
                                   decoration: textInputDecoration.copyWith(
-                                      hintText: 'Password'),
+                                      hintText: 'Jelszó',
+                                      prefixIcon: Icon(Icons.key, color: myPrimaryColor)
+                                  ),
                                   validator: (val) => val!.length < 6
-                                      ? 'Enter a password 6+ chars long'
+                                      ? 'A jelszó legalább 6 karakterból állhat.'
                                       : null,
                                   obscureText: true,
                                   onChanged: (val) {
                                     setState(() => pw = val);
                                   }),
                               const SizedBox(height: 20.0),
-                              ElevatedButton(
-                                  style: ElevatedButton.styleFrom(
-                                    primary: Colors.deepPurple, // background
-                                    onPrimary: Colors.white, // foreground
+                              //bejelentkezés gomb
+                              MaterialButton(
+                                  minWidth: double.infinity,
+                                  height: 60,
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(50),
                                   ),
+                                  color: myPrimaryColor,
                                   onPressed: () async {
                                     if (_formKey.currentState!.validate()) {
-                                      setState(() => loading = true);
+                                      //setState(() => loading = true);
                                       dynamic res = await _auth
                                           .signInWithEmailAndPw(email, pw);
+                                      Navigator.pushNamed(context, '/home');
                                       if (res == null) {
                                         setState(() => err =
-                                            'could not sign in with those credentials');
-                                        loading = false;
+                                        'Nem sikerült a bejelentkezés!');
+                                        //loading = false;
                                       }
                                     }
                                   },
-                                  child: Text('Sign In',
+                                  child: Text('Bejelentkezek'.toUpperCase(),
                                       style: TextStyle(
-                                          color: Colors.deepPurple[200])))
+                                          fontWeight: FontWeight.w400,
+                                          fontSize: 16,
+                                          color: Colors.white)))
                             ]),
-                          )),
-                    ))
+                          ))
+                    ],
+                  ),
+                ),
+                Container(
+                  height: MediaQuery.of(context).size.height / 2.5,
+                  decoration: BoxDecoration(
+                      image: DecorationImage(
+                        image: AssetImage('assets/images/roka-kave.png'),
+                        fit: BoxFit.cover,
+                      )),
+                ),
               ],
-            ));
+            )));
   }
 }

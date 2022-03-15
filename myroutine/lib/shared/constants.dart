@@ -4,9 +4,9 @@ const textInputDecoration = InputDecoration(
   fillColor: Colors.white,
   filled: true,
   enabledBorder: OutlineInputBorder(
-      borderSide: BorderSide(color: Colors.white, width: 2.0)),
+      borderSide: BorderSide(color: Colors.brown, width: 1.0)),
   focusedBorder: OutlineInputBorder(
-      borderSide: BorderSide(color: Colors.deepPurple, width: 2.0)),
+      borderSide: BorderSide(color: myPrimaryColor, width: 2.5)),
 );
 
 const myPrimaryColor = Colors.brown;

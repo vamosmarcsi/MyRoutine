@@ -23,7 +23,7 @@ class _SettingsFormState extends State<SettingsForm> {
   Widget build(BuildContext context) {
     final user = Provider.of<MyUser?>(context);
     return StreamBuilder<UserData>(
-        stream: DatabaseService(uid: user!.uid).userData,
+        stream: DatabaseService(uid: user?.uid ?? "").userData,
         builder: (context, snapshot) {
           if (snapshot.hasData) {
             UserData? userData = snapshot.data;
@@ -58,7 +58,7 @@ class _SettingsFormState extends State<SettingsForm> {
                 ElevatedButton(
                     onPressed: () async {
                       if (_formKey.currentState!.validate()) {
-                        await DatabaseService(uid: user.uid).updateUserData(
+                        await DatabaseService(uid: user?.uid ?? "").updateUserData(
                             _currentSkinProblem ?? SkinProblems.notSpecified,
                             _currentSkinType ?? SkinType.notSpecified);
                         Navigator.pop(context);

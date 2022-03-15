@@ -11,18 +11,9 @@ class Authenticate extends StatefulWidget {
 }
 
 class _AuthenticateState extends State<Authenticate> {
-  bool isSignedIn = true;
-  void toggleView() {
-    setState(() => isSignedIn = !isSignedIn);
-  }
 
   @override
   Widget build(BuildContext context) {
-    if (!isSignedIn) {
-      return SignIn(toggleView: toggleView);
-    } else {
-      return Welcome(toggleView: toggleView);
-      //Register(toggleView: toggleView);
-    }
+    return Container();
   }
 }

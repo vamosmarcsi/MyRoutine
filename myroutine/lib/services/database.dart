@@ -9,16 +9,15 @@ class DatabaseService {
   DatabaseService({required this.uid});
 
   final CollectionReference productCollection =
-      FirebaseFirestore.instance.collection('products');
+  FirebaseFirestore.instance.collection('products');
 
-  Future updateUserData(SkinProblems skinProblem, SkinType skinType) async {
+  Future updateUserData(SkinProblems skinProblem, SkinType skinType, ) async {
     return await productCollection
         .doc(uid)
         .set({
-          //TODO: befejezni
-          'skinProblem': skinProblem, 
-          'skinType': skinType
-          });
+      'skinProblem': skinProblem,
+      'skinType': skinType
+    });
   }
 
   List<Product> _productListFromSnapshot(QuerySnapshot snapshot) {
@@ -31,9 +30,9 @@ class DatabaseService {
         texture: doc.get('texture') ?? '',
         area: doc.get('area') ?? '',
         category: doc.get('category') ?? '',
-        effect: doc.get('effect') ?? '',
+        //effect: doc.get('effect') ?? '',
         reviews: doc.get('reviews') ?? '',
-        ingredients: doc.get('ingredients') ?? '',
+        //ingredients: doc.get('ingredients') ?? '',
       );
     }).toList();
   }
@@ -55,6 +54,6 @@ class DatabaseService {
 
   Stream<UserData> get userData {
     return productCollection.doc(uid).snapshots()
-    .map(_userDataFromSnapshot);
+        .map(_userDataFromSnapshot);
   }
 }

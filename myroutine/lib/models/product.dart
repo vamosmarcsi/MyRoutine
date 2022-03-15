@@ -6,15 +6,16 @@ import 'package:myroutine/enums/ingredients.dart';
 
 class Product {
   final String name;
-  final Brands brand;
+  final String brand;
   final String skinProblem;
   final String skinType;
   final String texture;
-  final Areas area;
-  final Categories category;
-  final List<Effects> effect;
-  final List<String> reviews;
-  final List<Ingredients> ingredients;
+  final String area;
+  final String category;
+  //final List<Effects> effect;
+  final String reviews;
+  //final List<Ingredients> ingredients;
 
-  Product({required this.name, required this.brand, required this.texture, required this.area, required this.category, required this.effect, required this.reviews, required this.ingredients, required this.skinProblem, required this.skinType});
+  Product({required this.name, required this.brand, required this.texture, required this.area, required this.category,
+    /*required this.effect, required this.ingredients, */ required this.reviews, required this.skinProblem, required this.skinType});
 }

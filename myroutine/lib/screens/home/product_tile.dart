@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:myroutine/models/product.dart';
+import 'package:myroutine/shared/constants.dart';
 
 class ProductTile extends StatelessWidget {
   ProductTile({required this.product });
@@ -14,10 +15,10 @@ class ProductTile extends StatelessWidget {
         child: ListTile(
           leading: CircleAvatar(
             radius: 25.0,
-            backgroundColor: Colors.deepPurple[100],
+            backgroundColor: myPrimaryColor,
           ),
-            title: Text(product.skinProblem),
-            subtitle: Text(product.skinType),
+            title: Text(product.brand),
+            subtitle: Text(product.name),
           )
       )
       );
