@@ -6,6 +6,15 @@ import 'package:myroutine/services/database.dart';
 
 class AuthService {
   final FirebaseAuth _auth = FirebaseAuth.instance;
+  User? userInfo = FirebaseAuth.instance.currentUser;
+
+  String getUid() {
+    return userInfo!.uid;
+  }
+
+  String? getEmailAddress() {
+    return userInfo!.email;
+  }
 
   //create object based on FirebaseUser
   MyUser? _userFromFirebaseUser(User user) {

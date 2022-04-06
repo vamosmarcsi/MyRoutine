@@ -6,6 +6,7 @@ import 'package:myroutine/shared/constants.dart';
 import 'package:provider/provider.dart';
 import 'package:myroutine/services/database.dart';
 import 'package:myroutine/screens/home/product_list.dart';
+import 'package:myroutine/screens//side_menu.dart';
 
 class Home extends StatefulWidget {
   const Home({Key? key}) : super(key: key);
@@ -17,6 +18,7 @@ class Home extends StatefulWidget {
 class _HomeState extends State<Home> {
   final AuthService _auth = AuthService();
   final _formKey = GlobalKey<FormState>();
+  final padding = EdgeInsets.symmetric(horizontal: 20);
   bool loading = false;
   @override
   Widget build(BuildContext context) {
@@ -32,46 +34,28 @@ class _HomeState extends State<Home> {
           });
     }
 
-    /*return Scaffold(
-      backgroundColor: myPrimaryLightColor,
-      appBar: AppBar(
-        title: Text('Home'),
-        backgroundColor:myPrimaryColor,
-        elevation: 0.0,
-        /*actions: <Widget>[
-          TextButton.icon(
-            //onpressed is for signing out
-              onPressed: () async {
-                await _auth.signOut();
-              },
-              icon: Icon(Icons.person),
-              label: Text('kijelentkezés'))
-        ],*/
-      ),
-    );*/
-
     return StreamProvider<List<Product>>.value(
         value: DatabaseService(uid: '').products,
         initialData: [],
         child: Scaffold(
+          drawer: SideMenu(),
           backgroundColor: myPrimaryLightColor,
           appBar: AppBar(
-            title: const Text("Home"),
             backgroundColor: myPrimaryColor,
             elevation: 0.0,
             actions: <Widget>[
-              TextButton.icon(
+              //settings
+              /*IconButton(
                   onPressed: () => _showSettingsPanel(),
-                  icon: Icon(Icons.settings, color: Colors.black),
-                  label: Text('settings', style: TextStyle(color: Colors.black))),
-              TextButton.icon(
-                //onpressed is for signing out
+                  icon: Icon(Icons.settings, color: Colors.black),),*/
+              //logout
+              IconButton(
                   onPressed: () async {
                     await _auth.signOut();
+                    Navigator.pushNamed(context, '/welcome');
                   },
-                  icon: Icon(Icons.person, color: Colors.black),
-                  label: Text('logout',
-                      style: TextStyle(color: Colors.black))),
+                  icon: Icon(Icons.logout, color: Colors.black),
+                  ),
             ],
           ),
           body: ProductList(),

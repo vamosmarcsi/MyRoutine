@@ -102,8 +102,7 @@ class _RegisterState extends State<Register> {
                                                 () => err = 'Érvényes email címet adj meg!');
                                         //loading = false;
                                       } else {
-                                        //TODO varázslóra ugrani
-                                        Navigator.pushNamed(context,'/home');
+                                        Navigator.pushNamed(context,'/wizard');
                                       }
                                     }
                                   },
@@ -123,14 +122,14 @@ class _RegisterState extends State<Register> {
                     ],
                   ),
                 ),
-                Container(
+                Flexible(child: Container(
                   height: MediaQuery.of(context).size.height / 2.5,
                   decoration: BoxDecoration(
                       image: DecorationImage(
                         image: AssetImage('assets/images/roka-pitypang.png'),
                         fit: BoxFit.cover,
                       )),
-                ),
+                ),),
               ]
           ),
         ));

@@ -39,12 +39,12 @@ class Welcome extends StatelessWidget {
                     ],
                   ],
                 ),
-                Container(
+                Flexible(child: Container(
                   height: MediaQuery.of(context).size.height / 2,
                   decoration: BoxDecoration(
                       image: DecorationImage(
                           image: AssetImage('assets/images/roka-ulo.png'))),
-                ),
+                ),),
                 Column(
                   children: [
                     ...<Widget>[
@@ -63,7 +63,6 @@ class Welcome extends StatelessWidget {
                               color: myPrimaryColor,
                             )),
                         onPressed: () {
-                          Navigator.pop(context);
                           Navigator.pushNamed(context, '/login');
                         },
                       ),

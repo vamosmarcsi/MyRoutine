@@ -6,6 +6,7 @@ import 'package:myroutine/screens/authenticate/register.dart';
 import 'package:myroutine/screens/authenticate/sign_in.dart';
 import 'package:myroutine/screens/authenticate/welcome.dart';
 import 'package:myroutine/screens/home/home.dart';
+import 'package:myroutine/screens/wizard/wizard.dart';
 import 'package:myroutine/shared/loading.dart';
 import 'models/myuser.dart';
 import 'package:provider/provider.dart';
@@ -39,6 +40,9 @@ class MyApp extends StatelessWidget {
           '/register': (context) => Register(),
           '/login': (context) => SignIn(),
           '/welcome': (context) => Welcome(),
+          '/settings': (context) => Welcome(),
+          '/profile': (context) => Welcome(),
+          '/wizard': (context) => Wizard(),
         },
       ),
     );

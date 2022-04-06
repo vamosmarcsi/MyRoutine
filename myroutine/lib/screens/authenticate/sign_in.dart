@@ -37,6 +37,7 @@ class _SignInState extends State<SignIn> {
           leading: IconButton(
               onPressed: () {
                 Navigator.pop(context);
+                Navigator.pushNamed(context, '/welcome');
               },
               icon: Icon(Icons.arrow_back_ios,
                   size: 20, color: Colors.black)),
@@ -127,13 +128,13 @@ class _SignInState extends State<SignIn> {
                     ],
                   ),
                 ),
-                Container(
-                  height: MediaQuery.of(context).size.height / 2.5,
+                Flexible(child: Container(
+                  height: MediaQuery.of(context).size.height / 3,
                   decoration: BoxDecoration(
                       image: DecorationImage(
                         image: AssetImage('assets/images/roka-kave.png'),
                         fit: BoxFit.cover,
-                      )),
+                      )),),
                 ),
               ],
             )));
