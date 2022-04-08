@@ -8,7 +8,7 @@ class SideMenu extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final padding = EdgeInsets.symmetric(horizontal: 20, vertical: 20);
-    final email = AuthService().getEmailAddress();
+    final email = AuthService().getEmailAddress() ?? '';
     return Drawer(
       child: Material(
         color: myPrimaryLightColor,
@@ -33,7 +33,7 @@ class SideMenu extends StatelessWidget {
                             style:
                                 TextStyle(fontSize: 20, color: Colors.white)),
                         const SizedBox(height: 4),
-                        Text(email!,
+                        Text(email,
                             style:
                                 TextStyle(fontSize: 14, color: Colors.white)),
                       ]),
@@ -47,7 +47,8 @@ class SideMenu extends StatelessWidget {
               const SizedBox(height: 48),
               buildMenuItems(context, text: 'Profil', icon: Icons.people, path: '/profile'),
               buildMenuItems(context, text: 'Beállítások', icon: Icons.people, path: '/settings'),
-              buildMenuItems(context, text: 'Varázsló', icon: Icons.people, path: '/wizard')
+              buildMenuItems(context, text: 'Varázsló', icon: Icons.people, path: '/wizard'),
+              buildMenuItems(context, text: 'Adatbázis kezelése', icon: Icons.people, path: '/admin')
             ]),
           ),
         ]),

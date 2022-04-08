@@ -2,6 +2,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/services.dart';
+import 'package:myroutine/screens/admin/admin_settings.dart';
 import 'package:myroutine/screens/authenticate/register.dart';
 import 'package:myroutine/screens/authenticate/sign_in.dart';
 import 'package:myroutine/screens/authenticate/welcome.dart';
@@ -27,6 +28,7 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+
     return StreamProvider<MyUser?>.value(
       catchError: (_, __) => null,
       value: AuthService().user,
@@ -43,6 +45,7 @@ class MyApp extends StatelessWidget {
           '/settings': (context) => Welcome(),
           '/profile': (context) => Welcome(),
           '/wizard': (context) => Wizard(),
+          '/admin': (context) => AdminSettings(),
         },
       ),
     );

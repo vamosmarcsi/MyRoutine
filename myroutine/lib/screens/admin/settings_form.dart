@@ -4,7 +4,6 @@ import 'package:myroutine/enums/skin_types.dart';
 import 'package:myroutine/models/myuser.dart';
 import 'package:myroutine/services/database.dart';
 import 'package:myroutine/shared/constants.dart';
-import 'package:myroutine/shared/loading.dart';
 import 'package:provider/provider.dart';
 
 class SettingsForm extends StatefulWidget {
@@ -25,7 +24,6 @@ class _SettingsFormState extends State<SettingsForm> {
     return StreamBuilder<UserData>(
         stream: DatabaseService(uid: user?.uid ?? "").userData,
         builder: (context, snapshot) {
-          if (snapshot.hasData) {
             UserData? userData = snapshot.data;
             return Form(
               key: _formKey,
@@ -64,12 +62,10 @@ class _SettingsFormState extends State<SettingsForm> {
                         Navigator.pop(context);
                       }
                     },
-                    child: Text('Update')),
+                    child: Text('Mentés')),
               ]),
             );
-          } else {
-            return const Loading();
           }
-        });
+        );
   }
 }

@@ -13,7 +13,11 @@ class AuthService {
   }
 
   String? getEmailAddress() {
-    return userInfo!.email;
+    if(userInfo?.email == null) {
+      //
+    } else {
+      return userInfo?.email;
+    }
   }
 
   //create object based on FirebaseUser

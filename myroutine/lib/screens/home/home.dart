@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:myroutine/models/product.dart';
-import 'package:myroutine/screens/home/settings_form.dart';
+import 'package:myroutine/screens/admin/settings_form.dart';
 import 'package:myroutine/services/auth.dart';
 import 'package:myroutine/shared/constants.dart';
 import 'package:provider/provider.dart';

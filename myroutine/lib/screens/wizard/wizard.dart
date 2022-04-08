@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:myroutine/enums/skin_problems.dart';
 import 'package:myroutine/shared/constants.dart';
-import 'package:dropdown_formfield/dropdown_formfield.dart';
 
 class Wizard extends StatefulWidget {
   const Wizard({Key? key}) : super(key: key);
@@ -68,8 +66,8 @@ class _WizardState extends State<Wizard> {
                                   prefixIcon:
                                       Icon(Icons.email, color: myPrimaryColor)),
                             ),
-                            DropdownButtonFormField(
-                              value: current ?? '',
+                            /*DropdownButtonFormField(
+                              value: current,
                               decoration: textInputDecoration,
                               items: skinProbs.map((skinProb) {
                                 return DropdownMenuItem<String>(
@@ -78,7 +76,7 @@ class _WizardState extends State<Wizard> {
                                 );
                               }).toList(),
                               onChanged: (val) => {}
-                            )
+                            )*/
                           ],
                         ),
                       ))

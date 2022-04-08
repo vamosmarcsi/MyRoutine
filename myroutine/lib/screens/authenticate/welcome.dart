@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:myroutine/screens/authenticate/authenticate.dart';
 import 'package:myroutine/screens/authenticate/register.dart';
 import 'package:myroutine/screens/authenticate/sign_in.dart';
-import 'package:myroutine/screens/wrapper.dart';
 import 'package:myroutine/shared/constants.dart';
 
 class Welcome extends StatelessWidget {
