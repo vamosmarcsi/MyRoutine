@@ -70,6 +70,7 @@ class _SignInState extends State<SignIn> {
                               const SizedBox(height: 20.0),
                               //email
                               TextFormField(
+                                keyboardType: TextInputType.emailAddress,
                                 decoration: textInputDecoration.copyWith(
                                     hintText: 'Email cím',
                                     prefixIcon: Icon(Icons.email, color: myPrimaryColor)
@@ -111,6 +112,7 @@ class _SignInState extends State<SignIn> {
                                       dynamic res = await _auth
                                           .signInWithEmailAndPw(email, pw);
                                       Navigator.pushNamed(context, '/home');
+                                      print("navigator to home");
                                       if (res == null) {
                                         setState(() => err =
                                         'Nem sikerült a bejelentkezés!');

@@ -55,12 +55,13 @@ class _SettingsFormState extends State<SettingsForm> {
                 ),
                 ElevatedButton(
                     onPressed: () async {
-                      if (_formKey.currentState!.validate()) {
+                      //TODO átalakítani
+                      /*if (_formKey.currentState!.validate()) {
                         await DatabaseService(uid: user?.uid ?? "").updateUserData(
                             _currentSkinProblem ?? SkinProblems.notSpecified,
                             _currentSkinType ?? SkinType.notSpecified);
                         Navigator.pop(context);
-                      }
+                      }*/
                     },
                     child: Text('Mentés')),
               ]),

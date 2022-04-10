@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:myroutine/enums/skin_types.dart';
 import 'package:myroutine/services/auth.dart';
 import 'package:myroutine/shared/constants.dart';
 import 'package:multi_select_flutter/multi_select_flutter.dart';
+import 'package:intl/intl.dart';
 
 class Register extends StatefulWidget {
   @override
@@ -18,16 +18,28 @@ class SkinProblem {
     required this.id,
     required this.name,
   });
+
+  @override
+  String toString() {
+    return 'SkinProblem{name: $name}';
+  }
 }
 
 class _RegisterState extends State<Register> {
   final AuthService _auth = AuthService();
-  final _formKey = GlobalKey<FormState>();
-  final _formKey2 = GlobalKey<FormState>();
+  List<GlobalKey<FormState>> _formkeys = [
+    GlobalKey<FormState>(),
+    GlobalKey<FormState>(),
+    GlobalKey<FormState>()
+  ];
   bool loading = false;
   String email = '';
   String pw = '';
+  String pw2 = "";
   String err = '';
+  String name = "";
+  DateTime dob = DateTime.now();
+  TextEditingController dateinput = TextEditingController();
   int currentStep = 0;
   String? selectedValue;
   static List<SkinProblem> skinProbs = [
@@ -41,8 +53,6 @@ class _RegisterState extends State<Register> {
     SkinProblem(id: 8, name: "rosacea"),
     SkinProblem(id: 9, name: "akné"),
   ];
-  final _items =
-      skinProbs.map((s) => MultiSelectItem<SkinProblem>(s, s.name)).toList();
   static List<String> skinTypes = [
     "normál",
     "száraz",
@@ -51,6 +61,11 @@ class _RegisterState extends State<Register> {
     "érzékeny"
   ];
   List<SkinProblem> selected = [];
+  List<String> selectedSkinProblems = [];
+  String selectedSkinType = "";
+  bool isAdmin = false;
+  bool isComplete = false;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -69,7 +84,7 @@ class _RegisterState extends State<Register> {
           height: MediaQuery.of(context).size.height,
           width: MediaQuery.of(context).size.width,
           child: Column(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              //mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: <Widget>[
                 Column(
                   children: <Widget>[
@@ -86,7 +101,7 @@ class _RegisterState extends State<Register> {
                   ],
                 ),
                 Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 40),
+                  padding: EdgeInsets.symmetric(horizontal: 20),
                   child: Column(
                     children: <Widget>[
                       Container(
@@ -100,16 +115,31 @@ class _RegisterState extends State<Register> {
                                       colorScheme: ColorScheme.light(
                                           primary: myPrimaryColor)),
                                   child: Stepper(
-                                    type: StepperType.horizontal,
                                     steps: getSteps(),
                                     currentStep: currentStep,
                                     onStepContinue: () {
                                       final isLastStep =
                                           currentStep == getSteps().length - 1;
                                       if (isLastStep) {
+                                        setState(() {
+                                          isComplete = true;
+                                        });
+                                        setState(() {
+                                          if (_formkeys[currentStep]
+                                              .currentState!
+                                              .validate()) {
+                                            currentStep += 1;
+                                          }
+                                        });
                                         Navigator.pushNamed(context, '/wizard');
                                       } else {
-                                        setState(() => currentStep += 1);
+                                        setState(() {
+                                          if (_formkeys[currentStep]
+                                              .currentState!
+                                              .validate()) {
+                                            currentStep += 1;
+                                          }
+                                        });
                                       }
                                     },
                                     onStepCancel: () {
@@ -122,8 +152,52 @@ class _RegisterState extends State<Register> {
                                       ControlsDetails details,
                                     ) {
                                       return Container(
-                                          margin: EdgeInsets.only(top: 50),
-                                          child: Row(children: [
+                                        child: Row(children: [
+                                          if (currentStep == 2)
+                                            Expanded(
+                                                child: MaterialButton(
+                                                    minWidth: double.infinity,
+                                                    height: 60,
+                                                    color: myPrimaryColor,
+                                                    onPressed: () async {
+                                                      if (_formkeys[2]
+                                                          .currentState!
+                                                          .validate()) {
+                                                        print(isAdmin);
+                                                        dynamic res = await _auth
+                                                            .regWithEmailAndPw(
+                                                                email,
+                                                                pw,
+                                                                name,
+                                                                dob.toString(),
+                                                                selectedSkinType,
+                                                                selectedSkinProblems,
+                                                          isAdmin
+                                                        );
+                                                        if (res == null) {
+                                                          print(
+                                                              "reg does not work, user is null");
+                                                          setState(() => err =
+                                                              'Érvényes email címet adj meg!');
+                                                        } else {
+                                                          print(
+                                                              "USER LÉTREJÖTT");
+                                                          Navigator
+                                                              .popAndPushNamed(
+                                                                  context,
+                                                                  '/home');
+                                                        }
+                                                      }
+                                                    },
+                                                    child: Text(
+                                                        'Mehet!'.toUpperCase(),
+                                                        style: TextStyle(
+                                                            fontWeight:
+                                                                FontWeight.w400,
+                                                            fontSize: 16,
+                                                            color: Colors
+                                                                .white)))),
+                                          if (currentStep != 2)
                                             Expanded(
                                                 child: MaterialButton(
                                                     minWidth: double.infinity,
@@ -131,22 +205,6 @@ class _RegisterState extends State<Register> {
                                                     color: myPrimaryColor,
                                                     onPressed:
                                                         details.onStepContinue,
-                                                    /*onPressed: () async {
-                                                    if (_formKey.currentState!.validate()) {
-                                                      dynamic res =
-                                                      await _auth.regWithEmailAndPw(email, pw);
-                                                      details.onStepContinue;
-                                                      if (res == null) {
-                                                        setState(
-                                                                () => err = 'Érvényes email címet adj meg!');
-                                                      } else {
-                                                        details.onStepContinue;
-                                                        print("DEBUG");
-                                                        print(res);
-                                                        //TODO kijavítani, mert ide nem lép be
-                                                      }
-                                                    }
-                                                  },*/
                                                     child: Text(
                                                         'Tovább'.toUpperCase(),
                                                         style: TextStyle(
@@ -155,24 +213,27 @@ class _RegisterState extends State<Register> {
                                                             fontSize: 16,
                                                             color: Colors
                                                                 .white)))),
-                                            if (currentStep != 0)
-                                              Expanded(
-                                                child: MaterialButton(
-                                                  minWidth: double.infinity,
-                                                  height: 60,
-                                                  onPressed:
-                                                      details.onStepCancel,
-                                                  child: Text(
-                                                      'Vissza'.toUpperCase(),
-                                                      style: TextStyle(
-                                                          fontWeight:
-                                                              FontWeight.w400,
-                                                          fontSize: 16,
-                                                          color:
-                                                              myPrimaryColor)),
-                                                ),
+                                          SizedBox(
+                                            width: 20,
+                                          ),
+                                          if (currentStep != 0)
+                                            Expanded(
+                                              child: MaterialButton(
+                                                minWidth: double.infinity,
+                                                height: 60,
+                                                onPressed: details.onStepCancel,
+                                                color: Colors.white70,
+                                                child: Text(
+                                                    'Vissza'.toUpperCase(),
+                                                    style: TextStyle(
+                                                        fontWeight:
+                                                            FontWeight.w400,
+                                                        fontSize: 16,
+                                                        color: myPrimaryColor)),
                                               ),
-                                          ]));
+                                            ),
+                                        ]),
+                                      );
                                     },
                                   ),
                                 ),
@@ -184,16 +245,6 @@ class _RegisterState extends State<Register> {
                     ],
                   ),
                 ),
-                /*Flexible(
-                  child: Container(
-                    height: MediaQuery.of(context).size.height,
-                    decoration: BoxDecoration(
-                        image: DecorationImage(
-                      image: AssetImage('assets/images/roka-pitypang.png'),
-                      fit: BoxFit.cover,
-                    )),
-                  ),
-                ),*/
               ]),
         ));
   }
@@ -205,16 +256,25 @@ class _RegisterState extends State<Register> {
             title: Text(''),
             content: Container(
               child: Form(
-                key: _formKey,
+                key: _formkeys[0],
                 child: Column(
                   children: [
                     TextFormField(
+                      keyboardType: TextInputType.emailAddress,
                       decoration: textInputDecoration.copyWith(
                           hintText: 'Email cím',
                           prefixIcon: Icon(Icons.email, color: myPrimaryColor)),
-                      validator: (val) => val!.isEmpty
-                          ? 'Kérlek, add meg az email címed!'
-                          : null,
+                      validator: (val) {
+                        if (val!.isEmpty) {
+                          return 'Kérlek, add meg az email címed!';
+                        } else {
+                          if (!RegExp(r'\S+@\S+\.\S+').hasMatch(val)) {
+                            return 'Kérlek, adj meg egy érvényes email címet!';
+                          } else {
+                            return null;
+                          }
+                        }
+                      },
                       onChanged: (val) {
                         setState(() => email = val);
                       },
@@ -234,36 +294,24 @@ class _RegisterState extends State<Register> {
                     SizedBox(height: 20.0),
                     TextFormField(
                         decoration: textInputDecoration.copyWith(
-                            hintText: 'Jelszó újra',
-                            prefixIcon: Icon(Icons.key, color: myPrimaryColor)),
-                        validator: (val) => val!.length < 6
-                            ? 'A jelszó legalább 6 karakterból állhat.'
-                            : null,
+                            hintText: 'Jelszó megerősítése',
+                            prefixIcon:
+                                Icon(Icons.lock, color: myPrimaryColor)),
+                        validator: (val) {
+                          if (val!.isEmpty) {
+                            return 'A jelszó nem lehet üres.';
+                          } else {
+                            if (val != pw.toString()) {
+                              return 'A jelszavak nem egyeznek meg!';
+                            } else {
+                              return null;
+                            }
+                          }
+                        },
                         obscureText: true,
                         onChanged: (val) {
                           setState(() => pw = val);
                         }),
-                    /*MaterialButton(
-                        minWidth: double.infinity,
-                        height: 60,
-                        color: myPrimaryColor,
-                        onPressed: () async {
-                          if (_formKey.currentState!.validate()) {
-                            dynamic res =
-                                await _auth.regWithEmailAndPw(email, pw);
-                            if (res == null) {
-                              setState(
-                                  () => err = 'Érvényes email címet adj meg!');
-                            } else {
-                              Navigator.pushNamed(context, '/wizard');
-                            }
-                          }
-                        },
-                        child: Text('Regisztrálok'.toUpperCase(),
-                            style: TextStyle(
-                                fontWeight: FontWeight.w400,
-                                fontSize: 16,
-                                color: Colors.white))),*/
                     SizedBox(height: 5.0),
                     Text(
                       err,
@@ -275,11 +323,12 @@ class _RegisterState extends State<Register> {
             )),
         //Second step:
         Step(
+            state: currentStep > 1 ? StepState.complete : StepState.disabled,
             isActive: currentStep >= 1,
             title: Text(''),
             content: Container(
               child: Form(
-                key: _formKey2,
+                key: _formkeys[1],
                 child: Column(
                   children: [
                     TextFormField(
@@ -287,55 +336,103 @@ class _RegisterState extends State<Register> {
                           hintText: 'Név',
                           prefixIcon:
                               Icon(Icons.account_box, color: myPrimaryColor)),
-                      /*validator: (val) => val!.isEmpty
-                          ? 'Kérlek, add meg az email címed!'
-                          : null,*/
+                      validator: (val) =>
+                          val!.isEmpty ? 'Kérlek, add meg a neved!' : null,
                       onChanged: (val) {
-                        setState(() => email = val);
+                        setState(() => name = val);
                       },
                     ),
                     SizedBox(height: 20.0),
                     TextFormField(
-                        decoration: textInputDecoration.copyWith(
-                            hintText: 'Születési dátum',
-                            prefixIcon:
-                                Icon(Icons.cake, color: myPrimaryColor)),
-                        /*validator: (val) => val!.length < 6
-                            ? 'A jelszó legalább 6 karakterból állhat.'
-                            : null,*/
-                        obscureText: true,
-                        onChanged: (val) {
-                          setState(() => pw = val);
-                        }),
-                    SizedBox(height: 20.0),
-                    DropdownButtonFormField(
-                      decoration: textInputDecoration,
-                      items: _skinTypeList(),
-                      hint: Text("Bőrtípus kiválasztása"),
-                      value: selectedValue,
-                      onChanged: (String? value) => setState(() {
-                        selectedValue = value ?? "";
-                      }),
-                    ),
-                    SizedBox(height: 20),
-                    MultiSelectDialogField<SkinProblem>(
-                      decoration: BoxDecoration(
-                        border: Border.all(color: myPrimaryColor, width: 1.0),
-                        borderRadius: BorderRadius.all(Radius.circular(10)),
-                      ),
-                      items: skinProbs
-                          .map((e) => MultiSelectItem(e, e.name))
-                          .toList(),
-                      listType: MultiSelectListType.CHIP,
-                      onConfirm: (values) {
-                        selected = values;
+                      controller: dateinput,
+                      decoration: textInputDecoration.copyWith(
+                          hintText: 'Születési dátum',
+                          prefixIcon: Icon(Icons.cake, color: myPrimaryColor)),
+                      readOnly: true,
+                      onTap: () async {
+                        DateTime? pickedDate = await showDatePicker(
+                            context: context,
+                            initialDate: dob,
+                            firstDate: DateTime(1900),
+                            lastDate: DateTime.now());
+                        if (pickedDate != null) {
+                          String formattedDate =
+                              DateFormat('yyyy-MM-dd').format(pickedDate);
+                          setState(() {
+                            dateinput.text =
+                                formattedDate; //set output date to TextField value.
+                          });
+                        }
                       },
+                    ),
+                    SizedBox(height: 20.0),
+                    Row(
+                      children: [
+                        Checkbox(
+                          value: isAdmin,
+                          onChanged: (value) {
+                            setState(() {
+                              isAdmin = value!;
+                            });
+                          },
+                        ),
+                        Text('Adminisztrátori jogosultság'),
+                      ],
                     ),
                   ],
                 ),
               ),
             )),
-        Step(isActive: currentStep >= 2, title: Text(''), content: Container()),
+        //third step
+        Step(
+            state: currentStep > 2 ? StepState.complete : StepState.disabled,
+            isActive: currentStep >= 2,
+            title: Text(''),
+            content: Container(
+                child: Form(
+                    key: _formkeys[2],
+                    child: Column(
+                      children: [
+                        DropdownButtonFormField(
+                          decoration: textInputDecoration,
+                          items: _skinTypeList(),
+                          hint: Text("Bőrtípus kiválasztása"),
+                          value: selectedValue,
+                          onChanged: (String? value) => setState(() {
+                            selectedValue = value ?? "";
+                            selectedSkinType = selectedValue ?? "";
+                          }),
+                        ),
+                        SizedBox(height: 20),
+                        MultiSelectDialogField<SkinProblem>(
+                          decoration: BoxDecoration(
+                            color: myPrimaryColor,
+                            border:
+                                Border.all(color: myPrimaryColor, width: 1.0),
+                            borderRadius: BorderRadius.all(Radius.circular(10)),
+                          ),
+                          buttonText: Text(
+                            'Bőrproblémák kiválasztása',
+                            style: TextStyle(
+                              color: Colors.white70,
+                              fontSize: 16,
+                            ),
+                          ),
+                          buttonIcon: Icon(Icons.add_circle),
+                          items: skinProbs
+                              .map((e) => MultiSelectItem(e, e.name))
+                              .toList(),
+                          listType: MultiSelectListType.CHIP,
+                          onConfirm: (values) {
+                            selected = values;
+                            selected.forEach((e) {
+                              selectedSkinProblems.add(e.name);
+                            });
+                          },
+                        ),
+                        SizedBox(height: 10)
+                      ],
+                    )))),
       ];
 
   List<DropdownMenuItem<String>> _skinTypeList() {

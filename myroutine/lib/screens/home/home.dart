@@ -35,7 +35,7 @@ class _HomeState extends State<Home> {
     }
 
     return StreamProvider<List<Product>>.value(
-        value: DatabaseService(uid: '').products,
+        value: DatabaseService(uid: _auth.getUid()).products,
         initialData: [],
         child: Scaffold(
           drawer: SideMenu(),

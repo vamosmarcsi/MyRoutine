@@ -13,6 +13,7 @@ class ProductList extends StatefulWidget {
 class _ProductListState extends State<ProductList> {
   @override
   Widget build(BuildContext context) {
+    //TODO nem köti össze a uid-val, ezért tölti be mindig ugyanazt a collectiont
     final products = Provider.of<List<Product>>(context);
     return ListView.builder(
       itemCount: products.length,

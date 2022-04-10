@@ -11,18 +11,22 @@ class DatabaseService {
   final CollectionReference productCollection =
   FirebaseFirestore.instance.collection('products');
 
-  Future updateUserData(SkinProblems skinProblem, SkinType skinType, ) async {
+  Future updateUserData(String name, String DOB, String skinType, List<String> skinProblem, bool isAdmin) async {
     return await productCollection
         .doc(uid)
         .set({
+      'name': name,
+      'DOB': DOB,
       'skinProblem': skinProblem,
-      'skinType': skinType
+      'skinType': skinType,
+      'isAdmin': isAdmin
     });
   }
 
   List<Product> _productListFromSnapshot(QuerySnapshot snapshot) {
     return snapshot.docs.map((doc) {
       return Product(
+        //TODO kijavítgatni
         name: doc.get('name') ?? '',
         brand: doc.get('brand') ?? '',
         skinProblem: doc.get('skinProblem') ?? '',
@@ -40,6 +44,8 @@ class DatabaseService {
   UserData _userDataFromSnapshot(DocumentSnapshot snapshot) {
     return UserData(
       uid: uid,
+      isAdmin: snapshot['isAdmin'],
+      name: snapshot['name'],
       DOB: snapshot['DOB'],
       skinProblem: snapshot['skinProblem'],
       skinType: snapshot['skinType'],

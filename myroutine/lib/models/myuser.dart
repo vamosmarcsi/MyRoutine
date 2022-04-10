@@ -10,12 +10,14 @@ class MyUser {
 
 class UserData {
   final String uid;
-  final List<SkinProblems> skinProblem;
-  final SkinType skinType;
-  final List<Product> likedProducts;
-  final String userType; //admin vagy mezei felhasználó
+  List<String> skinProblem;
+  SkinType skinType;
+  List<Product> likedProducts;
+  String userType; //admin vagy mezei felhasználó
   final String DOB;
+  String name;
+  bool isAdmin;
 
   UserData({required this.likedProducts, required this.userType, required this.DOB,
-    required this.uid, required this.skinProblem, required this.skinType});
+    required this.uid, required this.skinProblem, required this.skinType, required this.name, required this.isAdmin});
 }
