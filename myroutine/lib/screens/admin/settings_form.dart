@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:myroutine/enums/skin_problems.dart';
-import 'package:myroutine/enums/skin_types.dart';
 import 'package:myroutine/models/myuser.dart';
 import 'package:myroutine/services/database.dart';
 import 'package:myroutine/shared/constants.dart';
@@ -15,8 +13,8 @@ class SettingsForm extends StatefulWidget {
 
 class _SettingsFormState extends State<SettingsForm> {
   final _formKey = GlobalKey<FormState>();
-  SkinProblems? _currentSkinProblem;
-  SkinType? _currentSkinType;
+  String _currentSkinProblem = "";
+  String _currentSkinType = "";
   final List<String> skinProbs = ['pattanások', 'mitesszerek', 'száraz bőr'];
   @override
   Widget build(BuildContext context) {
@@ -39,7 +37,7 @@ class _SettingsFormState extends State<SettingsForm> {
                   decoration: textInputDecoration,
                   validator: (val) =>
                       val!.isEmpty ? 'Please enter a name' : null,
-                  onChanged: (val) => setState(() => _currentSkinType = val as SkinType?),
+                  onChanged: (val) => setState(() => _currentSkinType = val),
                 ),
                 DropdownButtonFormField(
                   decoration: textInputDecoration,
@@ -50,7 +48,7 @@ class _SettingsFormState extends State<SettingsForm> {
                     );
                   }).toList(),
                   onChanged: (val) {
-                    setState(() => _currentSkinProblem = val.toString() as SkinProblems?);
+                    setState(() => _currentSkinProblem = val.toString());
                   },
                 ),
                 ElevatedButton(

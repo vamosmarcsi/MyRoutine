@@ -1,6 +1,4 @@
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:myroutine/enums/skin_problems.dart';
-import 'package:myroutine/enums/skin_types.dart';
 import 'package:myroutine/models/myuser.dart';
 import 'package:myroutine/services/database.dart';
 

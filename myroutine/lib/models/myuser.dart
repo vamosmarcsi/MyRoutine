@@ -1,5 +1,3 @@
-import 'package:myroutine/enums/skin_problems.dart';
-import 'package:myroutine/enums/skin_types.dart';
 import 'package:myroutine/models/product.dart';
 
 class MyUser {
@@ -9,15 +7,13 @@ class MyUser {
 }
 
 class UserData {
-  final String uid;
+  //final String uid;
   List<String> skinProblem;
-  SkinType skinType;
-  List<Product> likedProducts;
-  String userType; //admin vagy mezei felhasználó
+  String skinType;
+  //List<Product> likedProducts;
   final String DOB;
   String name;
   bool isAdmin;
 
-  UserData({required this.likedProducts, required this.userType, required this.DOB,
-    required this.uid, required this.skinProblem, required this.skinType, required this.name, required this.isAdmin});
+  UserData({required this.DOB, required this.skinProblem, required this.skinType, required this.name, required this.isAdmin});
 }

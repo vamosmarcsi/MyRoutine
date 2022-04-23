@@ -10,21 +10,6 @@ class Register extends StatefulWidget {
   _RegisterState createState() => _RegisterState();
 }
 
-class SkinProblem {
-  final int id;
-  final String name;
-
-  SkinProblem({
-    required this.id,
-    required this.name,
-  });
-
-  @override
-  String toString() {
-    return 'SkinProblem{name: $name}';
-  }
-}
-
 class _RegisterState extends State<Register> {
   final AuthService _auth = AuthService();
   List<GlobalKey<FormState>> _formkeys = [
@@ -42,24 +27,6 @@ class _RegisterState extends State<Register> {
   TextEditingController dateinput = TextEditingController();
   int currentStep = 0;
   String? selectedValue;
-  static List<SkinProblem> skinProbs = [
-    SkinProblem(id: 1, name: 'pattanások'),
-    SkinProblem(id: 2, name: 'mitesszerek'),
-    SkinProblem(id: 3, name: 'száraz bőr'),
-    SkinProblem(id: 4, name: "ekcéma"),
-    SkinProblem(id: 5, name: "ráncok"),
-    SkinProblem(id: 6, name: "tág pórusok"),
-    SkinProblem(id: 7, name: "pigmentfoltok"),
-    SkinProblem(id: 8, name: "rosacea"),
-    SkinProblem(id: 9, name: "akné"),
-  ];
-  static List<String> skinTypes = [
-    "normál",
-    "száraz",
-    "zsíros",
-    "vízhiányos",
-    "érzékeny"
-  ];
   List<SkinProblem> selected = [];
   List<String> selectedSkinProblems = [];
   String selectedSkinType = "";
@@ -163,7 +130,6 @@ class _RegisterState extends State<Register> {
                                                       if (_formkeys[2]
                                                           .currentState!
                                                           .validate()) {
-                                                        print(isAdmin);
                                                         dynamic res = await _auth
                                                             .regWithEmailAndPw(
                                                                 email,
@@ -172,8 +138,7 @@ class _RegisterState extends State<Register> {
                                                                 dob.toString(),
                                                                 selectedSkinType,
                                                                 selectedSkinProblems,
-                                                          isAdmin
-                                                        );
+                                                                isAdmin);
                                                         if (res == null) {
                                                           print(
                                                               "reg does not work, user is null");

@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/services.dart';
 import 'package:myroutine/screens/admin/admin_settings.dart';
+import 'package:myroutine/screens/admin/edit_product.dart';
+import 'package:myroutine/screens/admin/new_product.dart';
 import 'package:myroutine/screens/authenticate/register.dart';
 import 'package:myroutine/screens/authenticate/sign_in.dart';
 import 'package:myroutine/screens/authenticate/welcome.dart';
@@ -28,7 +30,6 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
     return StreamProvider<MyUser?>.value(
       catchError: (_, __) => null,
       value: AuthService().user,
@@ -46,6 +47,7 @@ class MyApp extends StatelessWidget {
           '/profile': (context) => Welcome(),
           '/wizard': (context) => Wizard(),
           '/admin': (context) => AdminSettings(),
+          '/new-product': (context) => NewProduct(),
         },
       ),
     );
