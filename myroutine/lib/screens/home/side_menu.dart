@@ -1,8 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:myroutine/services/auth.dart';
 import 'package:myroutine/services/database.dart';
-import 'package:myroutine/shared/constants.dart';
+import 'package:myroutine/services/constants.dart';
+import 'package:myroutine/services/storage.dart';
 
 class SideMenu extends StatelessWidget {
   const SideMenu({Key? key}) : super(key: key);
@@ -13,6 +15,8 @@ class SideMenu extends StatelessWidget {
     final email = AuthService().getEmailAddress() ?? '';
     final uid = AuthService().getUid();
     final db = DatabaseService(uid: uid);
+    final storage = Storage();
+    String picName = "";
     return Drawer(
       child: Material(
         color: myPrimaryLightColor,
@@ -23,10 +27,49 @@ class SideMenu extends StatelessWidget {
               padding: padding.add(EdgeInsets.symmetric(vertical: 40)),
               child: Row(
                 children: <Widget>[
-                  CircleAvatar(
-                    radius: 30,
-                    backgroundColor: myPrimaryColor,
+                  FutureBuilder<DocumentSnapshot>(
+                    future: FirebaseFirestore.instance
+                        .collection('users')
+                        .doc(uid)
+                        .get(),
+                    builder: (BuildContext context,
+                        AsyncSnapshot<DocumentSnapshot> snapshot) {
+                      if (snapshot.hasError) {
+                        return Text("Something went wrong");
+                      }
+                      if (snapshot.hasData && !snapshot.data!.exists) {
+                        return Text("Document does not exist");
+                      }
+                      if (snapshot.connectionState ==
+                          ConnectionState.done) {
+                        Map<String, dynamic> data = snapshot.data!
+                            .data() as Map<String, dynamic>;
+                        picName = data['profile_pic'].toString();
+                        return FutureBuilder(
+                          future: storage.downloadProfilePicURL(picName),
+                          builder: (context, AsyncSnapshot<String> snapshot) {
+                            if(snapshot.connectionState == ConnectionState.done && snapshot.hasData) {
+                              return CircleAvatar(
+                                radius: 30.0,
+                                backgroundImage: Image.network(snapshot.data!).image,
+                              );
+                            }
+                            if(snapshot.connectionState == ConnectionState.waiting || !snapshot.hasData) {
+                              CircularProgressIndicator();
+                            }
+                            print(picName);
+                            return CircleAvatar(
+                              radius: 30.0,
+                              backgroundColor: myPrimaryColor,
+                              child: Icon(Icons.person, color: Colors.white70,),
+                            );
+                          },
+                        );
+                      }
+                      return Container();
+                    },
                   ),
+
                   SizedBox(
                     width: 20,
                   ),
@@ -78,6 +121,10 @@ class SideMenu extends StatelessWidget {
             padding: padding,
             child: Column(children: [
               const SizedBox(height: 48),
+              buildMenuItems(context,
+                  text: 'Rutinom',
+                  icon: Icons.list,
+                  path: '/home'),
               buildMenuItems(context,
                   text: 'Profil', icon: Icons.person, path: '/profile'),
               buildMenuItems(context,

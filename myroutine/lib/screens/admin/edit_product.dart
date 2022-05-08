@@ -1,9 +1,11 @@
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:multi_select_flutter/multi_select_flutter.dart';
-import 'package:myroutine/shared/constants.dart';
+import 'package:myroutine/services/constants.dart';
 import '../../services/auth.dart';
 import '../../services/database.dart';
+import 'package:myroutine/services/storage.dart';
 
 class EditProduct extends StatefulWidget {
   @override
@@ -18,6 +20,7 @@ class _EditProductState extends State<EditProduct> {
   final _currentCategory = TextEditingController();
   final _currentTexture = TextEditingController();
   final _currentSkinProblem = TextEditingController();
+  String product_pic = "";
 
   @override
   void dispose() {
@@ -40,6 +43,7 @@ class _EditProductState extends State<EditProduct> {
         ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
     final AuthService _auth = AuthService();
     final dbService = DatabaseService(uid: _auth.getUid());
+    final storage = Storage();
     List<SkinProblem> selected = [];
     List<SkinProblem> currentSP = [];
     List<String> currentSPstring = [];
@@ -89,6 +93,31 @@ class _EditProductState extends State<EditProduct> {
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
+                      ElevatedButton.icon(
+                          onPressed: () async {
+                            final pic = await FilePicker.platform.pickFiles(
+                                allowMultiple: false,
+                                type: FileType.custom,
+                                allowedExtensions: ['png', 'jpg']);
+                            if (pic == null) {
+                              ScaffoldMessenger.of(context)
+                                  .showSnackBar(const SnackBar(
+                                content: Text('No file selected'),
+                              ));
+                              return null;
+                            }
+                            final path = pic.files.single.path!;
+                            final fName = "products/" + pic.files.single.name;
+                            setState(() {
+                              product_pic = fName.toString();
+                            });
+                            storage.uploadProfilePic(path, fName).then(
+                                (value) => print('Uploaded product picture!'));
+
+                          },
+                          icon: Icon(Icons.add_a_photo),
+                          label: Text("Kép a termékről")),
+                      blank,
                       TextFormField(
                           initialValue: data['name'],
                           cursorColor: myPrimaryLightColor,
@@ -234,7 +263,7 @@ class _EditProductState extends State<EditProduct> {
                           ),
                         ),
                         buttonIcon: Icon(Icons.add_circle),
-                        initialValue: data['effects'].cast<String>(),
+                        initialValue: data['effect'].cast<String>(),
                         items:
                             effects.map((e) => MultiSelectItem(e, e)).toList(),
                         listType: MultiSelectListType.CHIP,
@@ -280,6 +309,7 @@ class _EditProductState extends State<EditProduct> {
                           color: myPrimaryColor,
                           onPressed: () {
                             if (_formKey.currentState!.validate()) {
+                              print(product_pic);
                               dbService.updateProductData(
                                   data['id'],
                                   _currentName.text.isEmpty
@@ -305,9 +335,10 @@ class _EditProductState extends State<EditProduct> {
                                       : _currentArea.text,
                                   [], //TODO beállítani
                                   selectedEffects.isEmpty
-                                      ? data['effects'].cast<String>()
+                                      ? data['effect'].cast<String>()
                                       : selectedEffects,
-                                  selectedIngredients);
+                                  selectedIngredients,
+                                  product_pic);
                               Navigator.popAndPushNamed(context, '/admin');
                             }
                           },

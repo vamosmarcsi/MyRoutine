@@ -14,6 +14,7 @@ class UserData {
   final String DOB;
   String name;
   bool isAdmin;
+  String profile_pic;
 
-  UserData({required this.DOB, required this.skinProblem, required this.skinType, required this.name, required this.isAdmin});
+  UserData({required this.DOB, required this.skinProblem, required this.skinType, required this.name, required this.isAdmin, required this.profile_pic});
 }

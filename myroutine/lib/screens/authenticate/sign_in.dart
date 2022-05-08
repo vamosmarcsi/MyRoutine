@@ -2,8 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:myroutine/services/auth.dart';
-import 'package:myroutine/shared/constants.dart';
-import 'package:myroutine/shared/loading.dart';
+import 'package:myroutine/services/constants.dart';
 
 class SignIn extends StatefulWidget {
   //const SignIn({Key? key}) : super(key: key);
@@ -26,9 +25,7 @@ class _SignInState extends State<SignIn> {
 
   @override
   Widget build(BuildContext context) {
-    return loading
-        ? const Loading()
-        : Scaffold(
+    return Scaffold(
         resizeToAvoidBottomInset: false,
         backgroundColor: Colors.brown[100],
         appBar: AppBar(

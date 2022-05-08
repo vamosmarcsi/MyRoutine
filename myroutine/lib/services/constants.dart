@@ -48,16 +48,15 @@ List<String> skinTypes = [
   "érzékeny"
 ];
 
-
-//TODO a címet megcsinálni const textstyle
-
 const List<String> brands = ["Geek & Gorgeous 101",
   "L'oreal Paris",
   "Vichy",
-  "La Roche Posay"];
+  "La Roche Posay",
+  "The Ordinary"
+];
 
 const List<String> categories = [
-  "nappali", "éjszakai", "szérum", "maszk", "tisztító", "hámlasztó"
+  "lemosó",  "tisztító", "hámlasztó", "toner", "szérum", "maszk", "hidratáló", "fényvédő",
 ];
 
 const List<String> effects = [
@@ -71,3 +70,9 @@ const List<String> ingredients = ["DISODIUM_TETRAMETHYLHEXADECENYLCYSTEINE_FORMY
 const List<String> areas = [
   "szemkörnyék", "száj", "arc, a szemek és száj kivételével"
 ];
+
+const blank = SizedBox(
+height: 10,
+);
+
+//bgxvzlbckrlhaj@candassociates.com

@@ -57,12 +57,12 @@ class AuthService {
   }
 
   //register with email and pw
-  Future regWithEmailAndPw(String email, String pw, String name, String DOB, String skinType, List<String> skinProbs, bool isAdmin) async {
+  Future regWithEmailAndPw(String email, String pw, String name, String DOB, String skinType, List<String> skinProbs, bool isAdmin, String profile_pic) async {
     try {
       UserCredential res = await _auth.createUserWithEmailAndPassword(
           email: email.toString(), password: pw);
       User? user = res.user;
-      await DatabaseService(uid: user!.uid).updateUserData(name, DOB, skinType, skinProbs, isAdmin);
+      await DatabaseService(uid: user!.uid).updateUserData(name, DOB, skinType, skinProbs, isAdmin, profile_pic);
       return _userFromFirebaseUser(user);
     } catch (err) {
       print(err.toString());

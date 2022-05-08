@@ -3,14 +3,16 @@ import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/services.dart';
 import 'package:myroutine/screens/admin/admin_settings.dart';
-import 'package:myroutine/screens/admin/edit_product.dart';
 import 'package:myroutine/screens/admin/new_product.dart';
 import 'package:myroutine/screens/authenticate/register.dart';
 import 'package:myroutine/screens/authenticate/sign_in.dart';
 import 'package:myroutine/screens/authenticate/welcome.dart';
 import 'package:myroutine/screens/home/home.dart';
+import 'package:myroutine/screens/home/profile.dart';
+import 'package:myroutine/screens/home/settings.dart';
+import 'package:myroutine/screens/wizard/choose.dart';
+import 'package:myroutine/screens/wizard/create_routine.dart';
 import 'package:myroutine/screens/wizard/wizard.dart';
-import 'package:myroutine/shared/loading.dart';
 import 'models/myuser.dart';
 import 'package:provider/provider.dart';
 import 'package:myroutine/services/auth.dart';
@@ -38,15 +40,16 @@ class MyApp extends StatelessWidget {
         debugShowCheckedModeBanner: false,
         initialRoute: '/welcome',
         routes: {
-          '/': (context) => Loading(),
-          '/home': (context) => Home(),
+          '/home': (context) => const Home(),
           '/register': (context) => Register(),
-          '/login': (context) => SignIn(),
+          '/login': (context) => const SignIn(),
           '/welcome': (context) => Welcome(),
-          '/settings': (context) => Welcome(),
-          '/profile': (context) => Welcome(),
-          '/wizard': (context) => Wizard(),
-          '/admin': (context) => AdminSettings(),
+          '/settings': (context) => const Settings(),
+          '/profile': (context) => const Profile(),
+          '/wizard': (context) => const Wizard(),
+          '/choose': (context) => const Choose(),
+          '/create': (context) => const CreateRoutine(),
+          '/admin': (context) => const AdminSettings(),
           '/new-product': (context) => NewProduct(),
         },
       ),

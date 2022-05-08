@@ -43,6 +43,11 @@ dependencies:
   multi_select_flutter: ^4.1.2
   form_validator: ^1.0.2
   intl: ^0.17.0
+  percent_indicator: ^4.0.0
+  image_picker: ^0.8.5
+  path: ^1.8.1
+  firebase_storage: ^10.2.15
+  file_picker: ^4.5.1
 
 dev_dependencies:
   flutter_test:

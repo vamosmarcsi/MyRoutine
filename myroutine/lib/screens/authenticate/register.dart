@@ -1,9 +1,11 @@
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:myroutine/services/auth.dart';
-import 'package:myroutine/shared/constants.dart';
+import 'package:myroutine/services/constants.dart';
 import 'package:multi_select_flutter/multi_select_flutter.dart';
 import 'package:intl/intl.dart';
+import 'package:myroutine/services/storage.dart';
 
 class Register extends StatefulWidget {
   @override
@@ -22,6 +24,7 @@ class _RegisterState extends State<Register> {
   String pw = '';
   String pw2 = "";
   String err = '';
+  String profile_pic = '';
   String name = "";
   DateTime dob = DateTime.now();
   TextEditingController dateinput = TextEditingController();
@@ -32,6 +35,7 @@ class _RegisterState extends State<Register> {
   String selectedSkinType = "";
   bool isAdmin = false;
   bool isComplete = false;
+  final storage = Storage();
 
   @override
   Widget build(BuildContext context) {
@@ -98,7 +102,7 @@ class _RegisterState extends State<Register> {
                                             currentStep += 1;
                                           }
                                         });
-                                        Navigator.pushNamed(context, '/wizard');
+                                        Navigator.pushNamed(context, '/choose');
                                       } else {
                                         setState(() {
                                           if (_formkeys[currentStep]
@@ -138,7 +142,8 @@ class _RegisterState extends State<Register> {
                                                                 dob.toString(),
                                                                 selectedSkinType,
                                                                 selectedSkinProblems,
-                                                                isAdmin);
+                                                                isAdmin,
+                                                                profile_pic);
                                                         if (res == null) {
                                                           print(
                                                               "reg does not work, user is null");
@@ -296,6 +301,31 @@ class _RegisterState extends State<Register> {
                 key: _formkeys[1],
                 child: Column(
                   children: [
+                    ElevatedButton.icon(
+                        onPressed: () async {
+                          final pic = await FilePicker.platform.pickFiles(
+                              allowMultiple: false,
+                              type: FileType.custom,
+                              allowedExtensions: ['png', 'jpg']);
+                          if (pic == null) {
+                            ScaffoldMessenger.of(context)
+                                .showSnackBar(const SnackBar(
+                              content: Text('No file selected'),
+                            ));
+                            return null;
+                          }
+                          final path = pic.files.single.path!;
+                          final fName = "profile_pic/" + pic.files.single.name;
+
+                          storage.uploadProfilePic(path, fName).then(
+                              (value) => print('Uploaded profile picture!'));
+                          setState(() {
+                            profile_pic = fName;
+                          });
+                        },
+                        icon: Icon(Icons.add_a_photo),
+                        label: Text("Profilkép")),
+                    blank,
                     TextFormField(
                       decoration: textInputDecoration.copyWith(
                           hintText: 'Név',
@@ -307,7 +337,7 @@ class _RegisterState extends State<Register> {
                         setState(() => name = val);
                       },
                     ),
-                    SizedBox(height: 20.0),
+                    blank,
                     TextFormField(
                       controller: dateinput,
                       decoration: textInputDecoration.copyWith(
@@ -330,7 +360,7 @@ class _RegisterState extends State<Register> {
                         }
                       },
                     ),
-                    SizedBox(height: 20.0),
+                    blank,
                     Row(
                       children: [
                         Checkbox(

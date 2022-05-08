@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:myroutine/models/product.dart';
 import 'package:myroutine/screens/admin/settings_form.dart';
 import 'package:myroutine/services/auth.dart';
-import 'package:myroutine/shared/constants.dart';
+import 'package:myroutine/services/constants.dart';
 import 'package:provider/provider.dart';
 import 'package:myroutine/services/database.dart';
-import 'package:myroutine/screens//side_menu.dart';
+import 'package:myroutine/screens/home/side_menu.dart';
 
 class Home extends StatefulWidget {
   const Home({Key? key}) : super(key: key);
@@ -39,7 +40,7 @@ class _HomeState extends State<Home> {
           drawer: SideMenu(),
           backgroundColor: myPrimaryLightColor,
           appBar: AppBar(
-            backgroundColor: myPrimaryColor,
+            backgroundColor: myPrimaryLightColor,
             elevation: 0.0,
             actions: <Widget>[
               IconButton(
@@ -51,7 +52,21 @@ class _HomeState extends State<Home> {
                   ),
             ],
           ),
-          body: Container(),
+          body: Container(
+            height: MediaQuery.of(context).size.height,
+            width: MediaQuery.of(context).size.width,
+            child: Column(
+              children: [
+                Text(
+                  "MyRoutine",
+                  style: GoogleFonts.comforter(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 40,
+                      color: Colors.white70),
+                ),
+              ],
+            ),
+          ),
         ));
   }
 }

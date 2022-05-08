@@ -1,9 +1,11 @@
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:multi_select_flutter/multi_select_flutter.dart';
-import 'package:myroutine/shared/constants.dart';
+import 'package:myroutine/services/constants.dart';
 import '../../services/auth.dart';
 import '../../services/database.dart';
+import 'package:myroutine/services/storage.dart';
 
 class NewProduct extends StatefulWidget {
   NewProduct();
@@ -40,11 +42,13 @@ class _NewProductState extends State<NewProduct> {
   Widget build(BuildContext context) {
     final AuthService _auth = AuthService();
     final dbService = DatabaseService(uid: _auth.getUid());
+    final storage = Storage();
     List<SkinProblem> selected = [];
     List<String> selectedSkinProblems = [];
     List<String> selectedSkinTypes = [];
     List<String> selectedEffects = [];
     List<String> selectedIngredients = [];
+    late String product_pic;
     return Scaffold(
       resizeToAvoidBottomInset: false,
       backgroundColor: Colors.brown[100],
@@ -81,6 +85,30 @@ class _NewProductState extends State<NewProduct> {
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
+                      ElevatedButton.icon(
+                          onPressed: () async {
+                            final pic = await FilePicker.platform.pickFiles(
+                                allowMultiple: false,
+                                type: FileType.custom,
+                                allowedExtensions: ['png', 'jpg']);
+                            if (pic == null) {
+                              ScaffoldMessenger.of(context)
+                                  .showSnackBar(const SnackBar(
+                                content: Text('No file selected'),
+                              ));
+                              return null;
+                            }
+                            final path = pic.files.single.path!;
+                            final fName = "products/" + pic.files.single.name;
+                            setState(() {
+                              product_pic = fName;
+                            });
+                            storage.uploadProfilePic(path, fName).then(
+                                    (value) => print('Uploaded product picture!'));
+                          },
+                          icon: Icon(Icons.add_a_photo),
+                          label: Text("Kép a termékről")),
+                      blank,
                       TextFormField(
                           cursorColor: myPrimaryLightColor,
                           decoration: textInputDecoration.copyWith(
@@ -308,7 +336,7 @@ class _NewProductState extends State<NewProduct> {
                                   _currentArea.text,
                                   [],
                                   selectedEffects,
-                                  selectedIngredients);
+                                  selectedIngredients, product_pic);
                               Navigator.popAndPushNamed(context, '/admin');
                             }
                           },

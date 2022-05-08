@@ -6,9 +6,9 @@ import 'package:provider/provider.dart';
 import '../../models/product.dart';
 import '../../services/auth.dart';
 import '../../services/database.dart';
-import '../../shared/constants.dart';
+import '../../services/constants.dart';
 import 'product_list.dart';
-import '../side_menu.dart';
+import '../home/side_menu.dart';
 
 class AdminSettings extends StatefulWidget {
   const AdminSettings({Key? key}) : super(key: key);
@@ -30,7 +30,7 @@ class _AdminSettingsState extends State<AdminSettings> {
           drawer: SideMenu(),
           backgroundColor: myPrimaryLightColor,
           appBar: AppBar(
-            backgroundColor: myPrimaryColor,
+            backgroundColor: myPrimaryLightColor,
             elevation: 0.0,
             actions: <Widget>[
               IconButton(

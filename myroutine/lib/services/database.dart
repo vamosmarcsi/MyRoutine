@@ -21,7 +21,8 @@ class DatabaseService {
       String area,
       List<String> reviews,
       List<String> effects,
-      List<String> ingredients) {
+      List<String> ingredients,
+      String picture) {
     return productCollection
         .add({
           'name': name,
@@ -33,20 +34,22 @@ class DatabaseService {
           'reviews': reviews,
           'ingredients': ingredients,
           'category': category,
-          'effect': effects
+          'effect': effects,
+          'picture': picture
         })
         .then((value) => print("Product Added: $name"))
         .catchError((error) => print("Failed to add product: $error"));
   }
 
   Future updateUserData(String name, String DOB, String skinType,
-      List<String> skinProblem, bool isAdmin) async {
+      List<String> skinProblem, bool isAdmin, String profile_pic) async {
     return await userCollection.doc(uid).set({
       'name': name,
       'DOB': DOB,
       'skinProblem': skinProblem,
       'skinType': skinType,
-      'isAdmin': isAdmin
+      'isAdmin': isAdmin,
+      'profile_pic': profile_pic
     });
   }
 
@@ -71,7 +74,8 @@ class DatabaseService {
       String area,
       List<String> reviews,
       List<String> effects,
-      List<String> ingredients) async {
+      List<String> ingredients,
+      String picture) async {
     return await productCollection
         .doc(id)
         .update({
@@ -84,7 +88,8 @@ class DatabaseService {
           'area': area,
           'reviews': reviews,
           'ingredients': ingredients,
-          'effects': effects
+          'effects': effects,
+          'picture': picture
         })
         .then((value) => print("Product Updated"))
         .catchError((error) => print("Failed to update user: $error"));
@@ -120,19 +125,21 @@ class DatabaseService {
         effect: doc.get('effect') ?? '',
         reviews: doc.get('reviews') ?? '',
         ingredients: doc.get('ingredients') ?? '',
+        picture: doc.get('picture') ?? ''
       );
     }).toList();
   }
 
   UserData _userDataFromSnapshot(DocumentSnapshot snapshot) {
     return UserData(
-      isAdmin: snapshot['isAdmin'],
-      name: snapshot['name'],
-      DOB: snapshot['DOB'],
-      skinProblem: snapshot['skinProblem'],
-      skinType: snapshot['skinType'],
-      //likedProducts: snapshot['likedProducts'],
-    );
+        isAdmin: snapshot['isAdmin'],
+        name: snapshot['name'],
+        DOB: snapshot['DOB'],
+        skinProblem: snapshot['skinProblem'],
+        skinType: snapshot['skinType'],
+        profile_pic: snapshot['profile_pic']
+        //likedProducts: snapshot['likedProducts'],
+        );
   }
 
   Stream<List<Product>> get products {
@@ -141,5 +148,9 @@ class DatabaseService {
 
   Stream<UserData> get userData {
     return userCollection.doc(uid).snapshots().map(_userDataFromSnapshot);
+  }
+
+  currentUserData() {
+    return userCollection.doc(uid).get();
   }
 }
