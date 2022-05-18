@@ -10,8 +10,6 @@ import 'package:myroutine/screens/authenticate/welcome.dart';
 import 'package:myroutine/screens/home/home.dart';
 import 'package:myroutine/screens/home/profile.dart';
 import 'package:myroutine/screens/home/settings.dart';
-import 'package:myroutine/screens/wizard/choose.dart';
-import 'package:myroutine/screens/wizard/create_routine.dart';
 import 'package:myroutine/screens/wizard/wizard.dart';
 import 'models/myuser.dart';
 import 'package:provider/provider.dart';
@@ -46,9 +44,7 @@ class MyApp extends StatelessWidget {
           '/welcome': (context) => Welcome(),
           '/settings': (context) => const Settings(),
           '/profile': (context) => const Profile(),
-          '/wizard': (context) => const Wizard(),
-          '/choose': (context) => const Choose(),
-          '/create': (context) => const CreateRoutine(),
+          '/wizard': (context) => Wizard(),
           '/admin': (context) => const AdminSettings(),
           '/new-product': (context) => NewProduct(),
         },

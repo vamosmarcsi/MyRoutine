@@ -8,13 +8,15 @@ import '../../services/auth.dart';
 import '../../services/database.dart';
 
 class Wizard extends StatefulWidget {
-  const Wizard({Key? key}) : super(key: key);
-
   @override
   State<Wizard> createState() => _WizardState();
 }
 
 class _WizardState extends State<Wizard> {
+  _WizardState();
+  List<String> chosen = [];
+  List<String> getChosen() => this.chosen;
+  void setChosen(List<String> value) => this.chosen = value;
   @override
   Widget build(BuildContext context) {
     final future =
@@ -33,9 +35,13 @@ class _WizardState extends State<Wizard> {
           Row(
             mainAxisSize: MainAxisSize.min,
             children: [
-              IconButton(onPressed: () {
-                Navigator.popAndPushNamed(context, '/home');
-              }, icon: Icon(Icons.check)),
+              IconButton(
+                  onPressed: () {
+                    print(getChosen());
+                    DatabaseService(uid: AuthService().getUid()).updateRoutine(getChosen());
+                    Navigator.popAndPushNamed(context, '/home');
+                  },
+                  icon: Icon(Icons.check)),
             ],
           ),
         ],
@@ -93,11 +99,40 @@ class _WizardState extends State<Wizard> {
                                         shrinkWrap: true,
                                         physics: NeverScrollableScrollPhysics(),
                                         children: snapshot.data!.docs
+                                            .where((element) => element["category"] == categories[index])
                                             .map((DocumentSnapshot document) {
                                           Map<String, dynamic> data = document
                                               .data()! as Map<String, dynamic>;
-                                          return WizardProductTile(
-                                              data: data, id: document.id);
+                                          return Padding(
+                                              padding: const EdgeInsets.only(top: 8.0),
+                                              child: Card(
+                                                  margin: const EdgeInsets.fromLTRB(20.0, 6.0, 20.0, 0.0),
+                                                  child: ListTile(
+                                                    leading: CircleAvatar(
+                                                      radius: 25.0,
+                                                      backgroundColor: myPrimaryColor,
+                                                    ),
+                                                    title: Text(data['name']),
+                                                    subtitle: Text(data['brand']),
+                                                    trailing: Row(
+                                                      mainAxisSize: MainAxisSize.min,
+                                                      children: [
+                                                        IconButton(
+                                                            onPressed: () {
+                                                              // setChosen([]);
+                                                              setState(() {
+                                                                if (getChosen().contains(document.id)) {
+                                                                  getChosen().remove(document.id);
+                                                                } else {
+                                                                  getChosen().add(document.id);
+                                                                }
+                                                              });
+                                                            },
+                                                            icon: getChosen().contains(document.id) ? Icon(Icons.check) : Icon(Icons.add_circle)
+                                                        ),
+                                                      ],
+                                                    ),
+                                                  )));
                                         }).toList(),
                                       ),
                                     ),

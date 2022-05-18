@@ -45,8 +45,6 @@ class ProductTile extends StatelessWidget {
                       children: [
                         IconButton(
                             onPressed: () {
-                              DatabaseService(uid: AuthService().getUid())
-                                  .updateID(id);
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(

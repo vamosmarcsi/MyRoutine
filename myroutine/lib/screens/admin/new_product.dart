@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -48,7 +49,8 @@ class _NewProductState extends State<NewProduct> {
     List<String> selectedSkinTypes = [];
     List<String> selectedEffects = [];
     List<String> selectedIngredients = [];
-    late String product_pic;
+    late String product_pic = "";
+    // Map<String, dynamic> brandsi = Constants().getBrands();
     return Scaffold(
       resizeToAvoidBottomInset: false,
       backgroundColor: Colors.brown[100],

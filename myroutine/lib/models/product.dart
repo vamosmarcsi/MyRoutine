@@ -11,7 +11,8 @@ class Product {
   final List<String> reviews;
   final List<String> ingredients;
   final String picture;
+  List<String> routine = [];
 
   Product({required this.id, required this.name, required this.brand, required this.texture, required this.area, required this.category,
-    required this.effect, required this.ingredients, required this.reviews, required this.skinProblem, required this.skinType, required this.picture});
+    required this.effect, required this.ingredients, required this.reviews, required this.skinProblem, required this.skinType, required this.picture,});
 }

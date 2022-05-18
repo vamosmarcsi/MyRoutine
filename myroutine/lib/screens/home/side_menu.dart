@@ -129,10 +129,6 @@ class SideMenu extends StatelessWidget {
                   text: 'Profil', icon: Icons.person, path: '/profile'),
               buildMenuItems(context,
                   text: 'Beállítások', icon: Icons.settings, path: '/settings'),
-              buildMenuItems(context,
-                  text: 'Varázsló',
-                  icon: Icons.person_search_rounded,
-                  path: '/wizard'),
               FutureBuilder(
                 future: FirebaseFirestore.instance
                     .collection('users')

@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:myroutine/models/myuser.dart';
 import 'package:myroutine/models/product.dart';
+import 'package:myroutine/services/auth.dart';
 
 class DatabaseService {
   final String uid;
@@ -10,6 +11,7 @@ class DatabaseService {
       FirebaseFirestore.instance.collection('products');
   final CollectionReference userCollection =
       FirebaseFirestore.instance.collection('users');
+  final CollectionReference routineProducts = FirebaseFirestore.instance.collection('users').doc(AuthService().getUid()).collection('routine');
 
   Future<void> addProduct(
       String name,
@@ -23,8 +25,8 @@ class DatabaseService {
       List<String> effects,
       List<String> ingredients,
       String picture) {
-    return productCollection
-        .add({
+    final doc = productCollection.doc();
+    return doc.set({
           'name': name,
           'brand': brand,
           'skinProblem': skinProblem,
@@ -35,7 +37,8 @@ class DatabaseService {
           'ingredients': ingredients,
           'category': category,
           'effect': effects,
-          'picture': picture
+          'picture': picture,
+          'id': doc.id
         })
         .then((value) => print("Product Added: $name"))
         .catchError((error) => print("Failed to add product: $error"));
@@ -53,14 +56,10 @@ class DatabaseService {
     });
   }
 
-  Future updateID(String id) async {
-    return await productCollection
-        .doc(id)
-        .update({
-          'id': id,
-        })
-        .then((value) => print("ID SET"))
-        .catchError((error) => print("Failed to add product: $error"));
+  Future updateRoutine(List<String> routine) async {
+    return await userCollection.doc(uid).update({
+      'routine': routine
+    });
   }
 
   Future updateProductData(
@@ -125,7 +124,7 @@ class DatabaseService {
         effect: doc.get('effect') ?? '',
         reviews: doc.get('reviews') ?? '',
         ingredients: doc.get('ingredients') ?? '',
-        picture: doc.get('picture') ?? ''
+        picture: doc.get('picture') ?? '',
       );
     }).toList();
   }
@@ -137,7 +136,8 @@ class DatabaseService {
         DOB: snapshot['DOB'],
         skinProblem: snapshot['skinProblem'],
         skinType: snapshot['skinType'],
-        profile_pic: snapshot['profile_pic']
+        profile_pic: snapshot['profile_pic'],
+        routine: snapshot['routine']
         //likedProducts: snapshot['likedProducts'],
         );
   }
