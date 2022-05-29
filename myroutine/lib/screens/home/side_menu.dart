@@ -11,7 +11,7 @@ class SideMenu extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final padding = EdgeInsets.symmetric(horizontal: 20, vertical: 20);
+    const padding = EdgeInsets.symmetric(horizontal: 20, vertical: 20);
     final email = AuthService().getEmailAddress() ?? '';
     final uid = AuthService().getUid();
     final db = DatabaseService(uid: uid);
@@ -22,9 +22,8 @@ class SideMenu extends StatelessWidget {
         color: myPrimaryLightColor,
         child: ListView(padding: padding, children: <Widget>[
           InkWell(
-            onTap: () {},
             child: Container(
-              padding: padding.add(EdgeInsets.symmetric(vertical: 40)),
+              padding: padding.add(const EdgeInsets.symmetric(vertical: 40)),
               child: Row(
                 children: <Widget>[
                   FutureBuilder<DocumentSnapshot>(
@@ -35,42 +34,65 @@ class SideMenu extends StatelessWidget {
                     builder: (BuildContext context,
                         AsyncSnapshot<DocumentSnapshot> snapshot) {
                       if (snapshot.hasError) {
-                        return Text("Something went wrong");
+                        return const Text("Something went wrong");
                       }
                       if (snapshot.hasData && !snapshot.data!.exists) {
-                        return Text("Document does not exist");
+                        return const Text("Document does not exist");
                       }
-                      if (snapshot.connectionState ==
-                          ConnectionState.done) {
-                        Map<String, dynamic> data = snapshot.data!
-                            .data() as Map<String, dynamic>;
+                      if (snapshot.connectionState == ConnectionState.done) {
+                        Map<String, dynamic> data =
+                            snapshot.data!.data() as Map<String, dynamic>;
                         picName = data['profile_pic'].toString();
-                        return FutureBuilder(
-                          future: storage.downloadProfilePicURL(picName),
-                          builder: (context, AsyncSnapshot<String> snapshot) {
-                            if(snapshot.connectionState == ConnectionState.done && snapshot.hasData) {
-                              return CircleAvatar(
+                        if (data["profile_pic"] != null) {
+                          return FutureBuilder(
+                            future: storage.downloadProfilePicURL(picName),
+                            builder: (context, AsyncSnapshot<String> snapshot) {
+                              if (snapshot.connectionState ==
+                                      ConnectionState.done &&
+                                  !data["profile_pic"].isEmpty) {
+                                return CircleAvatar(
+                                  radius: 30.0,
+                                  backgroundColor: myPrimaryColor,
+                                  backgroundImage:
+                                      Image.network(snapshot.data!).image,
+                                );
+                              }
+                              if (snapshot.connectionState ==
+                                      ConnectionState.waiting ||
+                                  !snapshot.hasData) {
+                                return const CircleAvatar(
+                                  radius: 30.0,
+                                  backgroundColor: myPrimaryColor,
+                                  child: Icon(
+                                    Icons.person,
+                                    color: Colors.white70,
+                                  ),
+                                );
+                              }
+                              //print(picName);
+                              return const CircleAvatar(
                                 radius: 30.0,
-                                backgroundImage: Image.network(snapshot.data!).image,
+                                backgroundColor: myPrimaryColor,
+                                child: Icon(
+                                  Icons.person,
+                                  color: Colors.white70,
+                                ),
                               );
-                            }
-                            if(snapshot.connectionState == ConnectionState.waiting || !snapshot.hasData) {
-                              CircularProgressIndicator();
-                            }
-                            print(picName);
-                            return CircleAvatar(
-                              radius: 30.0,
-                              backgroundColor: myPrimaryColor,
-                              child: Icon(Icons.person, color: Colors.white70,),
-                            );
-                          },
-                        );
+                            },
+                          );
+                        }
                       }
-                      return Container();
+                      return const CircleAvatar(
+                        radius: 30.0,
+                        backgroundColor: myPrimaryColor,
+                        child: Icon(
+                          Icons.person,
+                          color: Colors.white70,
+                        ),
+                      );
                     },
                   ),
-
-                  SizedBox(
+                  const SizedBox(
                     width: 20,
                   ),
                   Expanded(
@@ -86,22 +108,22 @@ class SideMenu extends StatelessWidget {
                             builder: (BuildContext context,
                                 AsyncSnapshot<DocumentSnapshot> snapshot) {
                               if (snapshot.hasError) {
-                                return Text("Something went wrong");
+                                return const Text("Something went wrong");
                               }
                               if (snapshot.hasData && !snapshot.data!.exists) {
-                                return Text("Document does not exist");
+                                return const Text("Document does not exist");
                               }
                               if (snapshot.connectionState ==
                                   ConnectionState.done) {
                                 Map<String, dynamic> data = snapshot.data!
                                     .data() as Map<String, dynamic>;
                                 return Text("${data['name']}",
-                                    style: TextStyle(
+                                    style: const TextStyle(
                                         fontSize: 20, color: Colors.white));
                               }
 
-                              return Text("loading",
-                                  style: TextStyle(
+                              return const Text("loading",
+                                  style: const TextStyle(
                                       fontSize: 20, color: Colors.white));
                             },
                           ),
@@ -109,8 +131,8 @@ class SideMenu extends StatelessWidget {
                           Text(email,
                               overflow: TextOverflow.ellipsis,
                               maxLines: 1,
-                              style:
-                                  TextStyle(fontSize: 14, color: Colors.white)),
+                              style: const TextStyle(
+                                  fontSize: 14, color: Colors.white)),
                         ]),
                   ),
                 ],
@@ -122,13 +144,11 @@ class SideMenu extends StatelessWidget {
             child: Column(children: [
               const SizedBox(height: 48),
               buildMenuItems(context,
-                  text: 'Rutinom',
-                  icon: Icons.list,
-                  path: '/home'),
+                  text: 'Rutinom', icon: Icons.list, path: '/home'),
               buildMenuItems(context,
                   text: 'Profil', icon: Icons.person, path: '/profile'),
               buildMenuItems(context,
-                  text: 'Beállítások', icon: Icons.settings, path: '/settings'),
+                  text: 'Kalauz', icon: Icons.help_outline, path: '/help'),
               FutureBuilder(
                 future: FirebaseFirestore.instance
                     .collection('users')
@@ -137,10 +157,10 @@ class SideMenu extends StatelessWidget {
                 builder: (BuildContext context,
                     AsyncSnapshot<DocumentSnapshot> snapshot) {
                   if (snapshot.hasError) {
-                    return Text("Something went wrong");
+                    return const Text("Valami hiba történt...");
                   }
                   if (snapshot.hasData && !snapshot.data!.exists) {
-                    return Text("Document does not exist");
+                    return const Text("Nem létező dokumentum...");
                   }
                   if (snapshot.connectionState == ConnectionState.done) {
                     Map<String, dynamic> data =

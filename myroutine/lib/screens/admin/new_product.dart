@@ -9,7 +9,6 @@ import '../../services/database.dart';
 import 'package:myroutine/services/storage.dart';
 
 class NewProduct extends StatefulWidget {
-  NewProduct();
 
   @override
   _NewProductState createState() => _NewProductState();
@@ -41,6 +40,8 @@ class _NewProductState extends State<NewProduct> {
 
   @override
   Widget build(BuildContext context) {
+    final brandsFromFB = ModalRoute.of(context)!.settings.arguments;
+    print(brandsFromFB.toString());
     final AuthService _auth = AuthService();
     final dbService = DatabaseService(uid: _auth.getUid());
     final storage = Storage();
@@ -50,7 +51,6 @@ class _NewProductState extends State<NewProduct> {
     List<String> selectedEffects = [];
     List<String> selectedIngredients = [];
     late String product_pic = "";
-    // Map<String, dynamic> brandsi = Constants().getBrands();
     return Scaffold(
       resizeToAvoidBottomInset: false,
       backgroundColor: Colors.brown[100],
@@ -88,37 +88,41 @@ class _NewProductState extends State<NewProduct> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       ElevatedButton.icon(
-                          onPressed: () async {
-                            final pic = await FilePicker.platform.pickFiles(
-                                allowMultiple: false,
-                                type: FileType.custom,
-                                allowedExtensions: ['png', 'jpg']);
-                            if (pic == null) {
-                              ScaffoldMessenger.of(context)
-                                  .showSnackBar(const SnackBar(
-                                content: Text('No file selected'),
-                              ));
-                              return null;
-                            }
-                            final path = pic.files.single.path!;
-                            final fName = "products/" + pic.files.single.name;
-                            setState(() {
-                              product_pic = fName;
-                            });
-                            storage.uploadProfilePic(path, fName).then(
-                                    (value) => print('Uploaded product picture!'));
-                          },
-                          icon: Icon(Icons.add_a_photo),
-                          label: Text("Kép a termékről")),
+                        onPressed: () async {
+                          final pic = await FilePicker.platform.pickFiles(
+                              allowMultiple: false,
+                              type: FileType.custom,
+                              allowedExtensions: ['png', 'jpg']);
+                          if (pic == null) {
+                            ScaffoldMessenger.of(context)
+                                .showSnackBar(const SnackBar(
+                              content: Text('Nincs kiválasztva fájl!'),
+                            ));
+                            return null;
+                          }
+                          final path = pic.files.single.path!;
+                          final fName = "products/" + pic.files.single.name;
+                          setState(() {
+                            product_pic = fName;
+                          });
+                          storage.uploadProfilePic(path, fName).then(
+                              (value) => print('Uploaded product picture!'));
+                        },
+                        icon: Icon(Icons.add_a_photo),
+                        label: Text("Kép a termékről"),
+                        style: ElevatedButton.styleFrom(
+                          primary: myPrimaryColor,
+                        ),
+                      ),
                       blank,
                       TextFormField(
-                          cursorColor: myPrimaryLightColor,
-                          decoration: textInputDecoration.copyWith(
-                            hintText: 'Termék neve',
-                          ),
-                          onChanged: (val) {
-                            setState(() => _currentName.text = val);
-                          },
+                        cursorColor: myPrimaryLightColor,
+                        decoration: textInputDecoration.copyWith(
+                          hintText: 'Termék neve',
+                        ),
+                        onChanged: (val) {
+                          setState(() => _currentName.text = val);
+                        },
                         validator: (val) {
                           if (val!.isEmpty) {
                             return 'Kitöltendő mező!';
@@ -131,71 +135,69 @@ class _NewProductState extends State<NewProduct> {
                         height: 10,
                       ),
                       DropdownButtonFormField<String>(
-                        decoration: textInputDecoration,
-                        hint: Text("Márka"),
-                        items: brands.map((item) {
-                          return DropdownMenuItem<String>(
-                            value: item,
-                            child: Text(item),
-                          );
-                        }).toList(),
-                        onChanged: (val) {
-                          setState(() => _currentBrand.text = val.toString());
-                        },
+                          decoration: textInputDecoration,
+                          hint: Text("Márka"),
+                          items: brands.map((item) {
+                            return DropdownMenuItem<String>(
+                              value: item,
+                              child: Text(item),
+                            );
+                          }).toList(),
+                          onChanged: (val) {
+                            setState(() => _currentBrand.text = val.toString());
+                          },
                           validator: (val) {
                             if (val == null) {
                               return 'Kérlek, válassz!';
                             } else {
                               return null;
                             }
-                          }
-                      ),
+                          }),
                       SizedBox(
                         height: 10,
                       ),
                       DropdownButtonFormField<String>(
-                        decoration: textInputDecoration,
-                        hint: Text("Terület, ahol kifejti a hatást"),
-                        items: areas.map((item) {
-                          return DropdownMenuItem<String>(
-                            value: item,
-                            child: Text(item),
-                          );
-                        }).toList(),
-                        onChanged: (val) {
-                          setState(() => _currentArea.text = val.toString());
-                        },
+                          decoration: textInputDecoration,
+                          hint: Text("Terület, ahol kifejti a hatást"),
+                          items: areas.map((item) {
+                            return DropdownMenuItem<String>(
+                              value: item,
+                              child: Text(item),
+                            );
+                          }).toList(),
+                          onChanged: (val) {
+                            setState(() => _currentArea.text = val.toString());
+                          },
                           validator: (val) {
                             if (val == null) {
                               return 'Kérlek, válassz!';
                             } else {
                               return null;
                             }
-                          }
-                      ),
+                          }),
                       SizedBox(
                         height: 10,
                       ),
                       DropdownButtonFormField<String>(
-                        decoration: textInputDecoration,
-                        hint: Text("Kategória"),
-                        items: categories.map((item) {
-                          return DropdownMenuItem<String>(
-                            value: item,
-                            child: Text(item),
-                          );
-                        }).toList(),
-                        onChanged: (val) {
-                          setState(() => _currentCategory.text = val.toString());
-                        },
+                          decoration: textInputDecoration,
+                          hint: Text("Kategória"),
+                          items: categories.map((item) {
+                            return DropdownMenuItem<String>(
+                              value: item,
+                              child: Text(item),
+                            );
+                          }).toList(),
+                          onChanged: (val) {
+                            setState(
+                                () => _currentCategory.text = val.toString());
+                          },
                           validator: (val) {
                             if (val == null) {
                               return 'Kérlek, válassz!';
                             } else {
                               return null;
                             }
-                          }
-                      ),
+                          }),
                       SizedBox(
                         height: 10,
                       ),
@@ -234,6 +236,8 @@ class _NewProductState extends State<NewProduct> {
                         items: skinProbs
                             .map((e) => MultiSelectItem(e, e.name))
                             .toList(),
+                        selectedColor: myPrimaryColor,
+                        selectedItemsTextStyle: TextStyle(color: Colors.white),
                         listType: MultiSelectListType.CHIP,
                         onConfirm: (values) {
                           selected = values;
@@ -259,6 +263,8 @@ class _NewProductState extends State<NewProduct> {
                           ),
                         ),
                         buttonIcon: Icon(Icons.add_circle),
+                        selectedColor: myPrimaryColor,
+                        selectedItemsTextStyle: TextStyle(color: Colors.white),
                         items: skinTypes
                             .map((e) => MultiSelectItem(e, e))
                             .toList(),
@@ -283,6 +289,8 @@ class _NewProductState extends State<NewProduct> {
                             fontSize: 16,
                           ),
                         ),
+                        selectedColor: myPrimaryColor,
+                        selectedItemsTextStyle: TextStyle(color: Colors.white),
                         buttonIcon: Icon(Icons.add_circle),
                         items:
                             effects.map((e) => MultiSelectItem(e, e)).toList(),
@@ -308,6 +316,8 @@ class _NewProductState extends State<NewProduct> {
                           ),
                         ),
                         buttonIcon: Icon(Icons.add_circle),
+                        selectedColor: myPrimaryColor,
+                        selectedItemsTextStyle: TextStyle(color: Colors.white),
                         items: ingredients
                             .map((e) => MultiSelectItem(e, e))
                             .toList(),
@@ -338,7 +348,8 @@ class _NewProductState extends State<NewProduct> {
                                   _currentArea.text,
                                   [],
                                   selectedEffects,
-                                  selectedIngredients, product_pic);
+                                  selectedIngredients,
+                                  product_pic);
                               Navigator.popAndPushNamed(context, '/admin');
                             }
                           },

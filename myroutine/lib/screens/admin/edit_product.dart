@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:multi_select_flutter/multi_select_flutter.dart';
 import 'package:myroutine/services/constants.dart';
+import 'package:path/path.dart';
 import '../../services/auth.dart';
 import '../../services/database.dart';
 import 'package:myroutine/services/storage.dart';
@@ -94,29 +95,32 @@ class _EditProductState extends State<EditProduct> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       ElevatedButton.icon(
-                          onPressed: () async {
-                            final pic = await FilePicker.platform.pickFiles(
-                                allowMultiple: false,
-                                type: FileType.custom,
-                                allowedExtensions: ['png', 'jpg']);
-                            if (pic == null) {
-                              ScaffoldMessenger.of(context)
-                                  .showSnackBar(const SnackBar(
-                                content: Text('No file selected'),
-                              ));
-                              return null;
-                            }
-                            final path = pic.files.single.path!;
-                            final fName = "products/" + pic.files.single.name;
-                            setState(() {
-                              product_pic = fName.toString();
-                            });
-                            storage.uploadProfilePic(path, fName).then(
-                                (value) => print('Uploaded product picture!'));
-
-                          },
-                          icon: Icon(Icons.add_a_photo),
-                          label: Text("Kép a termékről")),
+                        onPressed: () async {
+                          final pic = await FilePicker.platform.pickFiles(
+                              allowMultiple: false,
+                              type: FileType.custom,
+                              allowedExtensions: ['png', 'jpg']);
+                          if (pic == null) {
+                            ScaffoldMessenger.of(context)
+                                .showSnackBar(const SnackBar(
+                              content: Text('Nincs kiválasztva fájl!'),
+                            ));
+                            return null;
+                          }
+                          final path = pic.files.single.path!;
+                          final fName = "products/" + pic.files.single.name;
+                          setState(() {
+                            product_pic = fName.toString();
+                          });
+                          storage.uploadProfilePic(path, fName).then(
+                              (value) => print('Uploaded product picture!'));
+                        },
+                        icon: Icon(Icons.add_a_photo),
+                        label: Text("Kép a termékről"),
+                        style: ElevatedButton.styleFrom(
+                          primary: myPrimaryColor,
+                        ),
+                      ),
                       blank,
                       TextFormField(
                           initialValue: data['name'],
@@ -127,9 +131,7 @@ class _EditProductState extends State<EditProduct> {
                           onChanged: (val) {
                             setState(() => _currentName.text = val);
                           }),
-                      SizedBox(
-                        height: 10,
-                      ),
+                      blank,
                       DropdownButtonFormField(
                         decoration: textInputDecoration,
                         hint: Text("Márka"),
@@ -144,9 +146,7 @@ class _EditProductState extends State<EditProduct> {
                           setState(() => _currentBrand.text = val.toString());
                         },
                       ),
-                      SizedBox(
-                        height: 10,
-                      ),
+                      blank,
                       DropdownButtonFormField(
                         decoration: textInputDecoration,
                         hint: Text("Terület, ahol kifejti a hatást"),
@@ -161,9 +161,7 @@ class _EditProductState extends State<EditProduct> {
                           setState(() => _currentArea.text = val.toString());
                         },
                       ),
-                      SizedBox(
-                        height: 10,
-                      ),
+                      blank,
                       DropdownButtonFormField<String>(
                         decoration: textInputDecoration,
                         hint: Text("Kategória"),
@@ -179,9 +177,7 @@ class _EditProductState extends State<EditProduct> {
                               () => _currentCategory.text = val.toString());
                         },
                       ),
-                      SizedBox(
-                        height: 10,
-                      ),
+                      blank,
                       TextFormField(
                           cursorColor: myPrimaryLightColor,
                           initialValue: data['texture'],
@@ -191,9 +187,7 @@ class _EditProductState extends State<EditProduct> {
                           onChanged: (val) {
                             setState(() => _currentTexture.text = val);
                           }),
-                      SizedBox(
-                        height: 10,
-                      ),
+                      blank,
                       MultiSelectDialogField<SkinProblem>(
                         decoration: BoxDecoration(
                           color: myPrimaryColor,
@@ -207,6 +201,8 @@ class _EditProductState extends State<EditProduct> {
                             fontSize: 16,
                           ),
                         ),
+                        selectedColor: myPrimaryColor,
+                        selectedItemsTextStyle: TextStyle(color: Colors.white),
                         buttonIcon: Icon(Icons.add_circle),
                         initialValue: currentSP,
                         items: skinProbs
@@ -220,9 +216,7 @@ class _EditProductState extends State<EditProduct> {
                           });
                         },
                       ),
-                      SizedBox(
-                        height: 10,
-                      ),
+                      blank,
                       MultiSelectDialogField<String>(
                         decoration: BoxDecoration(
                           color: myPrimaryColor,
@@ -236,6 +230,8 @@ class _EditProductState extends State<EditProduct> {
                             fontSize: 16,
                           ),
                         ),
+                        selectedColor: myPrimaryColor,
+                        selectedItemsTextStyle: TextStyle(color: Colors.white),
                         buttonIcon: Icon(Icons.add_circle),
                         initialValue: data['skinType'].cast<String>(),
                         items: skinTypes
@@ -246,9 +242,7 @@ class _EditProductState extends State<EditProduct> {
                           selectedSkinTypes = values;
                         },
                       ),
-                      SizedBox(
-                        height: 10,
-                      ),
+                      blank,
                       MultiSelectDialogField<String>(
                         decoration: BoxDecoration(
                           color: myPrimaryColor,
@@ -263,6 +257,8 @@ class _EditProductState extends State<EditProduct> {
                           ),
                         ),
                         buttonIcon: Icon(Icons.add_circle),
+                        selectedColor: myPrimaryColor,
+                        selectedItemsTextStyle: TextStyle(color: Colors.white),
                         initialValue: data['effect'].cast<String>(),
                         items:
                             effects.map((e) => MultiSelectItem(e, e)).toList(),
@@ -271,9 +267,7 @@ class _EditProductState extends State<EditProduct> {
                           selectedEffects = values;
                         },
                       ),
-                      SizedBox(
-                        height: 10,
-                      ),
+                      blank,
                       MultiSelectDialogField<String>(
                         decoration: BoxDecoration(
                           color: myPrimaryColor,
@@ -288,6 +282,8 @@ class _EditProductState extends State<EditProduct> {
                           ),
                         ),
                         buttonIcon: Icon(Icons.add_circle),
+                        selectedColor: myPrimaryColor,
+                        selectedItemsTextStyle: TextStyle(color: Colors.white),
                         initialValue: data['ingredients'].cast<String>(),
                         items: ingredients
                             .map((e) => MultiSelectItem(e, e))
@@ -297,9 +293,7 @@ class _EditProductState extends State<EditProduct> {
                           selectedIngredients = values;
                         },
                       ),
-                      SizedBox(
-                        height: 10,
-                      ),
+                      blank,
                       MaterialButton(
                           minWidth: double.infinity,
                           height: 60,

@@ -7,13 +7,16 @@ import 'package:myroutine/screens/admin/new_product.dart';
 import 'package:myroutine/screens/authenticate/register.dart';
 import 'package:myroutine/screens/authenticate/sign_in.dart';
 import 'package:myroutine/screens/authenticate/welcome.dart';
+import 'package:myroutine/screens/home/current_product.dart';
+import 'package:myroutine/screens/home/edit_profile.dart';
+import 'package:myroutine/screens/home/help.dart';
 import 'package:myroutine/screens/home/home.dart';
 import 'package:myroutine/screens/home/profile.dart';
-import 'package:myroutine/screens/home/settings.dart';
 import 'package:myroutine/screens/wizard/wizard.dart';
 import 'models/myuser.dart';
 import 'package:provider/provider.dart';
 import 'package:myroutine/services/auth.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -35,6 +38,15 @@ class MyApp extends StatelessWidget {
       value: AuthService().user,
       initialData: null,
       child: MaterialApp(
+        localizationsDelegates: const [
+          GlobalMaterialLocalizations.delegate,
+          GlobalCupertinoLocalizations.delegate,
+          GlobalWidgetsLocalizations.delegate,
+        ],
+        supportedLocales: const [
+          Locale('en', 'EN'),
+          Locale('hu', 'HU')
+        ],
         debugShowCheckedModeBanner: false,
         initialRoute: '/welcome',
         routes: {
@@ -42,11 +54,13 @@ class MyApp extends StatelessWidget {
           '/register': (context) => Register(),
           '/login': (context) => const SignIn(),
           '/welcome': (context) => Welcome(),
-          '/settings': (context) => const Settings(),
           '/profile': (context) => const Profile(),
           '/wizard': (context) => Wizard(),
           '/admin': (context) => const AdminSettings(),
           '/new-product': (context) => NewProduct(),
+          '/current_product': (context) => CurrentProduct(),
+          '/edit_profile': (context) => const EditProfile(),
+          '/help': (context) => const Help(),
         },
       ),
     );

@@ -22,60 +22,26 @@ class ProductTile extends StatelessWidget {
             child: FutureBuilder(
               future: storage.downloadProfilePicURL(data["picture"]),
               builder: (context, AsyncSnapshot<String> snapshot) {
-                  return ListTile(
-                    leading: snapshot.connectionState == ConnectionState.done &&
-                            snapshot.hasData
-                        ? CircleAvatar(
-                            radius: 30.0,
-                            backgroundImage:
-                                Image.network(snapshot.data!).image,
-                          )
-                        : CircleAvatar(
-                            radius: 30.0,
-                            backgroundColor: myPrimaryColor,
-                            child: Icon(
-                              Icons.add_a_photo,
-                              color: Colors.white70,
+                return ListTile(
+                  leading: snapshot.connectionState == ConnectionState.done &&
+                          snapshot.hasData
+                      ? CircleAvatar(
+                          radius: 30.0,
+                          backgroundColor: myPrimaryColor,
+                          child: ClipRect(
+                            child: Image.network(
+                              snapshot.data!,
                             ),
                           ),
-                    title: Text(data['name']),
-                    subtitle: Text(data['brand']),
-                    trailing: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        IconButton(
-                            onPressed: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => EditProduct(),
-                                    settings: RouteSettings(arguments: data)),
-                              );
-                            },
-                            icon: Icon(Icons.edit)),
-                        IconButton(
-                            onPressed: () {
-                              DatabaseService(uid: AuthService().getUid())
-                                  .deleteProduct(id);
-                            },
-                            icon: Icon(Icons.delete)),
-                      ],
-                    ),
-                  );
-                if (snapshot.connectionState == ConnectionState.waiting ||
-                    !snapshot.hasData) {
-                  CircularProgressIndicator();
-                }
-                return Container();
-                /*return ListTile(
-                  leading: CircleAvatar(
-                    radius: 30.0,
-                    backgroundColor: myPrimaryColor,
-                    child: Icon(
-                      Icons.add_a_photo,
-                      color: Colors.white70,
-                    ),
-                  ),
+                        )
+                      : CircleAvatar(
+                          radius: 30.0,
+                          backgroundColor: myPrimaryColor,
+                          child: Icon(
+                            Icons.add_a_photo,
+                            color: Colors.white70,
+                          ),
+                        ),
                   title: Text(data['name']),
                   subtitle: Text(data['brand']),
                   trailing: Row(
@@ -83,8 +49,6 @@ class ProductTile extends StatelessWidget {
                     children: [
                       IconButton(
                           onPressed: () {
-                            DatabaseService(uid: AuthService().getUid())
-                                .updateID(id);
                             Navigator.push(
                               context,
                               MaterialPageRoute(
@@ -101,7 +65,7 @@ class ProductTile extends StatelessWidget {
                           icon: Icon(Icons.delete)),
                     ],
                   ),
-                );*/
+                );
               },
             )));
   }

@@ -95,6 +95,11 @@ class _SignInState extends State<SignIn> {
                                     setState(() => pw = val);
                                   }),
                               const SizedBox(height: 20.0),
+                              Text(
+                                err,
+                                style: const TextStyle(color: Colors.red, fontSize: 14.0),
+                              ),
+                              blank,
                               //bejelentkezés gomb
                               MaterialButton(
                                   minWidth: double.infinity,
@@ -106,14 +111,13 @@ class _SignInState extends State<SignIn> {
                                   onPressed: () async {
                                     if (_formKey.currentState!.validate()) {
                                       //setState(() => loading = true);
-                                      dynamic res = await _auth
-                                          .signInWithEmailAndPw(email, pw);
-                                      Navigator.pushNamed(context, '/home');
-                                      print("navigator to home");
+                                      dynamic res = await _auth.signInWithEmailAndPw(email, pw);
                                       if (res == null) {
                                         setState(() => err =
                                         'Nem sikerült a bejelentkezés!');
-                                        //loading = false;
+                                      } else {
+                                        Navigator.pushNamed(context, '/home');
+                                        print("navigator to home");
                                       }
                                     }
                                   },

@@ -1,8 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:myroutine/screens/wizard/wizard_product_tile.dart';
 import 'package:myroutine/services/constants.dart';
+import 'package:myroutine/services/storage.dart';
 
 import '../../services/auth.dart';
 import '../../services/database.dart';
@@ -21,6 +21,7 @@ class _WizardState extends State<Wizard> {
   Widget build(BuildContext context) {
     final future =
         DatabaseService(uid: AuthService().getUid()).currentUserData();
+    final storage = Storage();
     return Scaffold(
       backgroundColor: myPrimaryLightColor,
       appBar: AppBar(
@@ -37,7 +38,6 @@ class _WizardState extends State<Wizard> {
             children: [
               IconButton(
                   onPressed: () {
-                    print(getChosen());
                     DatabaseService(uid: AuthService().getUid()).updateRoutine(getChosen());
                     Navigator.popAndPushNamed(context, '/home');
                   },
@@ -72,16 +72,15 @@ class _WizardState extends State<Wizard> {
                   return StreamBuilder<QuerySnapshot>(
                     stream: FirebaseFirestore.instance
                         .collection('products')
-                        //.where('skinType'.contains(data["skinType"]), isEqualTo: true)
-                        .where('skinProblem',
-                            arrayContainsAny: data["skinProblem"])
+                        .where('skinType', arrayContains: data["skinType"])
+                        //.where('skinProblem', arrayContainsAny: data["skinProblem"])
                         .snapshots(),
                     builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
                       if (snapshot.hasError) {
                         return Text('Something went wrong');
                       }
                       if (snapshot.connectionState == ConnectionState.waiting) {
-                        return Text("Loading");
+                        return CircularProgressIndicator();
                       }
                       return Flexible(
                         child: ListView.builder(
@@ -108,10 +107,31 @@ class _WizardState extends State<Wizard> {
                                               child: Card(
                                                   margin: const EdgeInsets.fromLTRB(20.0, 6.0, 20.0, 0.0),
                                                   child: ListTile(
-                                                    leading: CircleAvatar(
-                                                      radius: 25.0,
-                                                      backgroundColor: myPrimaryColor,
-                                                    ),
+                                                    leading: FutureBuilder(
+                                                        future: storage.downloadProfilePicURL(data["picture"]),
+                                                        builder: (context, AsyncSnapshot<String> snapshot) {
+                                                          if (snapshot.connectionState ==
+                                                              ConnectionState.done &&
+                                                              snapshot.hasData) {
+                                                            return CircleAvatar(
+                                                              radius: 30.0,
+                                                              backgroundColor: myPrimaryColor,
+                                                              child: ClipRect(
+                                                                child: Image.network(
+                                                                  snapshot.data!,
+                                                                ),
+                                                              ),
+                                                            );
+                                                          }
+                                                          return const CircleAvatar(
+                                                            radius: 30.0,
+                                                            backgroundColor: myPrimaryColor,
+                                                            child: Icon(
+                                                              Icons.no_photography,
+                                                              color: Colors.white70,
+                                                            ),
+                                                          );
+                                                        }),
                                                     title: Text(data['name']),
                                                     subtitle: Text(data['brand']),
                                                     trailing: Row(
@@ -145,8 +165,7 @@ class _WizardState extends State<Wizard> {
                   );
                 }
 
-                return Text("loading",
-                    style: TextStyle(fontSize: 20, color: Colors.white));
+                return CircularProgressIndicator();
               })
         ],
       ),

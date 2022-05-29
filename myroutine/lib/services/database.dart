@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:myroutine/models/myuser.dart';
 import 'package:myroutine/models/product.dart';
@@ -11,7 +13,12 @@ class DatabaseService {
       FirebaseFirestore.instance.collection('products');
   final CollectionReference userCollection =
       FirebaseFirestore.instance.collection('users');
-  final CollectionReference routineProducts = FirebaseFirestore.instance.collection('users').doc(AuthService().getUid()).collection('routine');
+  final CollectionReference routineProducts = FirebaseFirestore.instance
+      .collection('users')
+      .doc(AuthService().getUid())
+      .collection('routine');
+  final CollectionReference brandCollection =
+      FirebaseFirestore.instance.collection('brands');
 
   Future<void> addProduct(
       String name,
@@ -26,7 +33,8 @@ class DatabaseService {
       List<String> ingredients,
       String picture) {
     final doc = productCollection.doc();
-    return doc.set({
+    return doc
+        .set({
           'name': name,
           'brand': brand,
           'skinProblem': skinProblem,
@@ -44,22 +52,46 @@ class DatabaseService {
         .catchError((error) => print("Failed to add product: $error"));
   }
 
-  Future updateUserData(String name, String DOB, String skinType,
+  Future updateUserData(
+      String name, String DOB, List<String> skinProblem) async {
+    return await userCollection
+        .doc(uid)
+        .update({
+          'name': name,
+          'DOB': DOB,
+          'skinProblem': skinProblem,
+        })
+        .then((value) => print("Profile Updated"))
+        .catchError((error) => print("Failed to update user: $error"));
+  }
+
+  Future setUserData(String name, String DOB, String skinType,
       List<String> skinProblem, bool isAdmin, String profile_pic) async {
-    return await userCollection.doc(uid).set({
-      'name': name,
-      'DOB': DOB,
-      'skinProblem': skinProblem,
-      'skinType': skinType,
-      'isAdmin': isAdmin,
-      'profile_pic': profile_pic
-    });
+    return await userCollection
+        .doc(uid)
+        .set({
+          'name': name,
+          'DOB': DOB,
+          'skinProblem': skinProblem,
+          'skinType': skinType,
+          'isAdmin': isAdmin,
+          'profile_pic': profile_pic,
+          'routine': []
+        })
+        .then((value) => print("Profile Updated"))
+        .catchError((error) => print("Failed to update user: $error"));
+  }
+
+  Future updateProfilePic(String profile_pic) async {
+    return await userCollection.doc(uid).update({'profile_pic': profile_pic});
   }
 
   Future updateRoutine(List<String> routine) async {
-    return await userCollection.doc(uid).update({
-      'routine': routine
-    });
+    return await userCollection.doc(uid).update({'routine': routine});
+  }
+
+  Future updateReviews(String id, List<String> reviews) async {
+    return await productCollection.doc(id).update({'reviews': reviews});
   }
 
   Future updateProductData(
@@ -131,15 +163,15 @@ class DatabaseService {
 
   UserData _userDataFromSnapshot(DocumentSnapshot snapshot) {
     return UserData(
-        isAdmin: snapshot['isAdmin'],
-        name: snapshot['name'],
-        DOB: snapshot['DOB'],
-        skinProblem: snapshot['skinProblem'],
-        skinType: snapshot['skinType'],
-        profile_pic: snapshot['profile_pic'],
-        routine: snapshot['routine']
-        //likedProducts: snapshot['likedProducts'],
-        );
+      isAdmin: snapshot['isAdmin'],
+      name: snapshot['name'],
+      DOB: snapshot['DOB'],
+      skinProblem: snapshot['skinProblem'],
+      skinType: snapshot['skinType'],
+      profile_pic: snapshot['profile_pic'],
+      routine: snapshot['routine'],
+      //likedProducts: snapshot['likedProducts'],
+    );
   }
 
   Stream<List<Product>> get products {
@@ -152,5 +184,25 @@ class DatabaseService {
 
   currentUserData() {
     return userCollection.doc(uid).get();
+  }
+
+  Future<void> addBrand(String brand) {
+    final doc = brandCollection.doc();
+    return doc
+        .set({'name': brand})
+        .then((value) => print("Product Added: $brand"))
+        .catchError((error) => print("Failed to add product: $error"));
+  }
+
+  Future<List> get brandsFromFirebase async{
+    List<String> brands = [];
+    QuerySnapshot querySnapshot = await FirebaseFirestore.instance.collection('brands').get();
+    final allData = querySnapshot.docs.map((e) => e.get("name")).toList();
+    FirebaseFirestore.instance.collection('brands').get().then((snapshot) => snapshot.docs.forEach((doc) {
+      Map<String, dynamic> data = doc.data();
+      //print(data["name"]);
+      brands.add(data["name"]);
+    }));
+    return allData;
   }
 }

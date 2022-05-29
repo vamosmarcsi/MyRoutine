@@ -1,0 +1,415 @@
+@startuml
+left to right direction
+set namespaceSeparator ::
+
+class "myroutine::main.dart::MyApp" {
+  +Widget build()
+}
+
+
+class "myroutine::models::myuser.dart::MyUser" {
+  +String uid
+}
+
+class "myroutine::models::myuser.dart::UserData" {
+  +List<String> skinProblem
+  +String skinType
+  +String DOB
+  +String name
+  +bool isAdmin
+  +String profile_pic
+  +List<String> routine
+}
+
+class "myroutine::models::product.dart::Product" {
+  +String id
+  +String name
+  +String brand
+  +List<String> skinProblem
+  +List<String> skinType
+  +String texture
+  +String area
+  +String category
+  +List<String> effect
+  +List<String> reviews
+  +List<String> ingredients
+  +String picture
+  +List<String> routine
+}
+
+class "myroutine::screens::admin::admin_settings.dart::AdminSettings" {
+  +State<AdminSettings> createState()
+}
+
+"flutter::src::widgets::framework.dart::StatefulWidget" <|-- "myroutine::screens::admin::admin_settings.dart::AdminSettings"
+
+class "myroutine::screens::admin::admin_settings.dart::_AdminSettingsState" {
+  +Widget build()
+}
+
+"flutter::src::widgets::framework.dart::State" <|-- "myroutine::screens::admin::admin_settings.dart::_AdminSettingsState"
+
+class "myroutine::screens::admin::edit_product.dart::EditProduct" {
+  +_EditProductState createState()
+}
+
+"flutter::src::widgets::framework.dart::StatefulWidget" <|-- "myroutine::screens::admin::edit_product.dart::EditProduct"
+
+class "myroutine::screens::admin::edit_product.dart::_EditProductState" {
+  -GlobalKey<FormState> _formKey
+  -TextEditingController _currentBrand
+  -TextEditingController _currentName
+  -TextEditingController _currentArea
+  -TextEditingController _currentCategory
+  -TextEditingController _currentTexture
+  -TextEditingController _currentSkinProblem
+  +String product_pic
+  +void dispose()
+  +void initState()
+  +Widget build()
+}
+
+"myroutine::screens::admin::edit_product.dart::_EditProductState" o-- "flutter::src::widgets::framework.dart::GlobalKey<FormState>"
+"myroutine::screens::admin::edit_product.dart::_EditProductState" o-- "flutter::src::widgets::editable_text.dart::TextEditingController"
+"flutter::src::widgets::framework.dart::State" <|-- "myroutine::screens::admin::edit_product.dart::_EditProductState"
+
+class "myroutine::screens::admin::new_product.dart::NewProduct" {
+  +_NewProductState createState()
+}
+
+"flutter::src::widgets::framework.dart::StatefulWidget" <|-- "myroutine::screens::admin::new_product.dart::NewProduct"
+
+class "myroutine::screens::admin::new_product.dart::_NewProductState" {
+  -GlobalKey<FormState> _formKey
+  -TextEditingController _currentBrand
+  -TextEditingController _currentName
+  -TextEditingController _currentArea
+  -TextEditingController _currentCategory
+  -TextEditingController _currentTexture
+  -TextEditingController _currentSkinProblem
+  +void dispose()
+  +void initState()
+  +Widget build()
+}
+
+"myroutine::screens::admin::new_product.dart::_NewProductState" o-- "flutter::src::widgets::framework.dart::GlobalKey<FormState>"
+"myroutine::screens::admin::new_product.dart::_NewProductState" o-- "flutter::src::widgets::editable_text.dart::TextEditingController"
+"flutter::src::widgets::framework.dart::State" <|-- "myroutine::screens::admin::new_product.dart::_NewProductState"
+
+class "myroutine::screens::admin::product_list.dart::ProductList" {
+  +_ProductListState createState()
+}
+
+"flutter::src::widgets::framework.dart::StatefulWidget" <|-- "myroutine::screens::admin::product_list.dart::ProductList"
+
+class "myroutine::screens::admin::product_list.dart::_ProductListState" {
+  +Widget build()
+}
+
+"flutter::src::widgets::framework.dart::State" <|-- "myroutine::screens::admin::product_list.dart::_ProductListState"
+
+class "myroutine::screens::admin::product_tile.dart::ProductTile" {
+  +Map<String, dynamic> data
+  +String id
+  +Widget build()
+}
+
+"flutter::src::widgets::framework.dart::StatelessWidget" <|-- "myroutine::screens::admin::product_tile.dart::ProductTile"
+
+class "myroutine::screens::admin::settings_form.dart::SettingsForm" {
+  +_SettingsFormState createState()
+}
+
+"flutter::src::widgets::framework.dart::StatefulWidget" <|-- "myroutine::screens::admin::settings_form.dart::SettingsForm"
+
+class "myroutine::screens::admin::settings_form.dart::_SettingsFormState" {
+  -GlobalKey<FormState> _formKey
+  -String _currentSkinProblem
+  -String _currentSkinType
+  +List<String> skinProbs
+  +Widget build()
+}
+
+"myroutine::screens::admin::settings_form.dart::_SettingsFormState" o-- "flutter::src::widgets::framework.dart::GlobalKey<FormState>"
+"flutter::src::widgets::framework.dart::State" <|-- "myroutine::screens::admin::settings_form.dart::_SettingsFormState"
+
+class "myroutine::screens::authenticate::register.dart::Register" {
+  +_RegisterState createState()
+}
+
+"flutter::src::widgets::framework.dart::StatefulWidget" <|-- "myroutine::screens::authenticate::register.dart::Register"
+
+class "myroutine::screens::authenticate::register.dart::_RegisterState" {
+  -AuthService _auth
+  -List<GlobalKey<FormState>> _formkeys
+  +bool loading
+  +String email
+  +String pw
+  +String pw2
+  +String err
+  +String profile_pic
+  +String name
+  +DateTime dob
+  +TextEditingController dateinput
+  +int currentStep
+  +String? selectedValue
+  +List<SkinProblem> selected
+  +List<String> selectedSkinProblems
+  +String selectedSkinType
+  +bool isAdmin
+  +bool isComplete
+  +Storage storage
+  +Widget build()
+  +List<Step> getSteps()
+  -List<DropdownMenuItem<String>> _skinTypeList()
+}
+
+"myroutine::screens::authenticate::register.dart::_RegisterState" o-- "myroutine::services::auth.dart::AuthService"
+"myroutine::screens::authenticate::register.dart::_RegisterState" o-- "flutter::src::widgets::editable_text.dart::TextEditingController"
+"myroutine::screens::authenticate::register.dart::_RegisterState" o-- "myroutine::services::storage.dart::Storage"
+"flutter::src::widgets::framework.dart::State" <|-- "myroutine::screens::authenticate::register.dart::_RegisterState"
+
+class "myroutine::screens::authenticate::sign_in.dart::SignIn" {
+  +_SignInState createState()
+}
+
+"flutter::src::widgets::framework.dart::StatefulWidget" <|-- "myroutine::screens::authenticate::sign_in.dart::SignIn"
+
+class "myroutine::screens::authenticate::sign_in.dart::_SignInState" {
+  -AuthService _auth
+  -GlobalKey<FormState> _formKey
+  +bool loading
+  +String email
+  +String pw
+  +String err
+  +Widget build()
+}
+
+"myroutine::screens::authenticate::sign_in.dart::_SignInState" o-- "myroutine::services::auth.dart::AuthService"
+"myroutine::screens::authenticate::sign_in.dart::_SignInState" o-- "flutter::src::widgets::framework.dart::GlobalKey<FormState>"
+"flutter::src::widgets::framework.dart::State" <|-- "myroutine::screens::authenticate::sign_in.dart::_SignInState"
+
+class "myroutine::screens::authenticate::welcome.dart::Welcome" {
+  +Widget build()
+}
+
+"flutter::src::widgets::framework.dart::StatelessWidget" <|-- "myroutine::screens::authenticate::welcome.dart::Welcome"
+
+class "myroutine::screens::home::current_product.dart::CurrentProduct" {
+  +State<CurrentProduct> createState()
+}
+
+"flutter::src::widgets::framework.dart::StatefulWidget" <|-- "myroutine::screens::home::current_product.dart::CurrentProduct"
+
+class "myroutine::screens::home::current_product.dart::_CurrentProductState" {
+  -GlobalKey<FormState> _formKey
+  -TextEditingController _currentBrand
+  -TextEditingController _currentName
+  -TextEditingController _currentArea
+  -TextEditingController _currentCategory
+  -TextEditingController _currentTexture
+  -TextEditingController _currentSkinProblem
+  -TextEditingController _currentReview
+  +String product_pic
+  +void dispose()
+  +void initState()
+  +Widget build()
+}
+
+"myroutine::screens::home::current_product.dart::_CurrentProductState" o-- "flutter::src::widgets::framework.dart::GlobalKey<FormState>"
+"myroutine::screens::home::current_product.dart::_CurrentProductState" o-- "flutter::src::widgets::editable_text.dart::TextEditingController"
+"flutter::src::widgets::framework.dart::State" <|-- "myroutine::screens::home::current_product.dart::_CurrentProductState"
+
+class "myroutine::screens::home::edit_profile.dart::EditProfile" {
+  +State<EditProfile> createState()
+}
+
+"flutter::src::widgets::framework.dart::StatefulWidget" <|-- "myroutine::screens::home::edit_profile.dart::EditProfile"
+
+class "myroutine::screens::home::edit_profile.dart::_EditProfileState" {
+  -GlobalKey<FormState> _formKey
+  +String name
+  +DateTime dob
+  +String profilePic
+  +TextEditingController dateInput
+  -TextEditingController _currentName
+  +List<SkinProblem> selected
+  +List<String> selectedSkinProblems
+  +List<SkinProblem> currentSP
+  +List<String> currentSPstring
+  +Storage storage
+  +void dispose()
+  +Widget build()
+  +Widget uploadPic()
+}
+
+"myroutine::screens::home::edit_profile.dart::_EditProfileState" o-- "flutter::src::widgets::framework.dart::GlobalKey<FormState>"
+"myroutine::screens::home::edit_profile.dart::_EditProfileState" o-- "flutter::src::widgets::editable_text.dart::TextEditingController"
+"myroutine::screens::home::edit_profile.dart::_EditProfileState" o-- "myroutine::services::storage.dart::Storage"
+"flutter::src::widgets::framework.dart::State" <|-- "myroutine::screens::home::edit_profile.dart::_EditProfileState"
+
+class "myroutine::screens::home::home.dart::Home" {
+  +_HomeState createState()
+}
+
+"flutter::src::widgets::framework.dart::StatefulWidget" <|-- "myroutine::screens::home::home.dart::Home"
+
+class "myroutine::screens::home::home.dart::_HomeState" {
+  -AuthService _auth
+  +Storage storage
+  +Widget build()
+}
+
+"myroutine::screens::home::home.dart::_HomeState" o-- "myroutine::services::auth.dart::AuthService"
+"myroutine::screens::home::home.dart::_HomeState" o-- "myroutine::services::storage.dart::Storage"
+"flutter::src::widgets::framework.dart::State" <|-- "myroutine::screens::home::home.dart::_HomeState"
+
+class "myroutine::screens::home::profile.dart::Profile" {
+  +State<Profile> createState()
+}
+
+"flutter::src::widgets::framework.dart::StatefulWidget" <|-- "myroutine::screens::home::profile.dart::Profile"
+
+class "myroutine::screens::home::profile.dart::_ProfileState" {
+  -GlobalKey<FormState> _formKey
+  +String name
+  +DateTime dob
+  +String profilePic
+  +TextEditingController dateInput
+  -TextEditingController _currentName
+  +List<SkinProblem> selected
+  +List<String> selectedSkinProblems
+  +List<SkinProblem> currentSP
+  +List<String> currentSPstring
+  +Storage storage
+  +void initState()
+  +void dispose()
+  +Widget build()
+}
+
+"myroutine::screens::home::profile.dart::_ProfileState" o-- "flutter::src::widgets::framework.dart::GlobalKey<FormState>"
+"myroutine::screens::home::profile.dart::_ProfileState" o-- "flutter::src::widgets::editable_text.dart::TextEditingController"
+"myroutine::screens::home::profile.dart::_ProfileState" o-- "myroutine::services::storage.dart::Storage"
+"flutter::src::widgets::framework.dart::State" <|-- "myroutine::screens::home::profile.dart::_ProfileState"
+
+class "myroutine::screens::home::settings.dart::Settings" {
+  +State<Settings> createState()
+}
+
+"flutter::src::widgets::framework.dart::StatefulWidget" <|-- "myroutine::screens::home::settings.dart::Settings"
+
+class "myroutine::screens::home::settings.dart::_SettingsState" {
+  +Widget build()
+}
+
+"flutter::src::widgets::framework.dart::State" <|-- "myroutine::screens::home::settings.dart::_SettingsState"
+
+class "myroutine::screens::home::side_menu.dart::SideMenu" {
+  +Widget build()
+  +Widget buildMenuItems()
+}
+
+"flutter::src::widgets::framework.dart::StatelessWidget" <|-- "myroutine::screens::home::side_menu.dart::SideMenu"
+
+class "myroutine::screens::wizard::wizard.dart::Wizard" {
+  +State<Wizard> createState()
+}
+
+"flutter::src::widgets::framework.dart::StatefulWidget" <|-- "myroutine::screens::wizard::wizard.dart::Wizard"
+
+class "myroutine::screens::wizard::wizard.dart::_WizardState" {
+  +List<String> chosen
+  +List<String> getChosen()
+  +void setChosen()
+  +Widget build()
+}
+
+"flutter::src::widgets::framework.dart::State" <|-- "myroutine::screens::wizard::wizard.dart::_WizardState"
+
+class "myroutine::screens::wizard::wizard_product_list.dart::WizardProductList" {
+  +String category
+  +State<WizardProductList> createState()
+}
+
+"flutter::src::widgets::framework.dart::StatefulWidget" <|-- "myroutine::screens::wizard::wizard_product_list.dart::WizardProductList"
+
+class "myroutine::screens::wizard::wizard_product_list.dart::_WizardProductListState" {
+  +Widget build()
+}
+
+"flutter::src::widgets::framework.dart::State" <|-- "myroutine::screens::wizard::wizard_product_list.dart::_WizardProductListState"
+
+class "myroutine::screens::wizard::wizard_product_tile.dart::WizardProductTile" {
+  +Map<String, dynamic> data
+  +String id
+  +State<WizardProductTile> createState()
+}
+
+"flutter::src::widgets::framework.dart::StatefulWidget" <|-- "myroutine::screens::wizard::wizard_product_tile.dart::WizardProductTile"
+
+class "myroutine::screens::wizard::wizard_product_tile.dart::_WizardProductTileState" {
+  +Map<String, dynamic> data
+  +String id
+  +Icon icon
+  +bool isChecked
+  +Widget build()
+}
+
+"flutter::src::widgets::framework.dart::State" <|-- "myroutine::screens::wizard::wizard_product_tile.dart::_WizardProductTileState"
+
+class "myroutine::services::auth.dart::AuthService" {
+  -FirebaseAuth _auth
+  +User? userInfo
+  +Stream<MyUser?> user
+  +String getUid()
+  +String? getEmailAddress()
+  -MyUser? _userFromFirebaseUser()
+  +Future<dynamic> signInAnonym()
+  +Future<dynamic> signInWithEmailAndPw()
+  +Future<dynamic> regWithEmailAndPw()
+  +Future<dynamic> signOut()
+}
+
+
+
+class "myroutine::services::constants.dart::SkinProblem" {
+  +int id
+  +String name
+  +String toString()
+}
+
+class "myroutine::services::database.dart::DatabaseService" {
+  +String uid
+  +CollectionReference<Object?> productCollection
+  +CollectionReference<Object?> userCollection
+  +CollectionReference<Object?> routineProducts
+  +Stream<List<Product>> products
+  +Stream<UserData> userData
+  +Future<void> addProduct()
+  +Future<dynamic> updateUserData()
+  +Future<dynamic> setUserData()
+  +Future<dynamic> updateProfilePic()
+  +Future<dynamic> updateRoutine()
+  +Future<dynamic> updateReviews()
+  +Future<dynamic> updateProductData()
+  +Future<void> deleteUser()
+  +Future<void> deleteProduct()
+  -List<Product> _productListFromSnapshot()
+  -UserData _userDataFromSnapshot()
+  +dynamic currentUserData()
+}
+
+
+"myroutine::services::database.dart::DatabaseService" o-- "dart::async::Stream<List<Product>>"
+"myroutine::services::database.dart::DatabaseService" o-- "dart::async::Stream<UserData>"
+
+class "myroutine::services::storage.dart::Storage" {
+  +FirebaseStorage storage
+  +Future<void> uploadProfilePic()
+  +Future<String> downloadProfilePicURL()
+}
+
+"myroutine::services::storage.dart::Storage" o-- "firebase_storage::firebase_storage.dart::FirebaseStorage"
+
+
+@enduml

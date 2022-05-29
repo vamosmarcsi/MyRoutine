@@ -1,4 +1,3 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
 const textInputDecoration = InputDecoration(
@@ -66,7 +65,11 @@ const List<String> effects = [
   "sötét karikák ellen", "tápláló", "tisztító", "fényvédelem"
 ];
 
-const List<String> ingredients = ["DISODIUM_TETRAMETHYLHEXADECENYLCYSTEINE_FORMYLPROLINATE"]; //TODO kiegészíteni
+const List<String> ingredients = ["Water", "PEG-6 Caprylic/Capric Glycerides", "Propanediol", "Methyl Gluceth-20", "DISODIUM_TETRAMETHYLHEXADECENYLCYSTEINE_FORMYLPROLINATE", "Poloxamer 184",
+  "Caprylic/Capric Triglyceride", "Hydroxyethyl Acrylate/Sodium Acryloyldimethyl Taurate Copolymer", "Ammonium Acryloyldimethyltaurate/VP Copolymer", "Panthenol", "Allantoin", "Xylitylglucoside",
+  "Anhydroxylitol", "Xylitol", "Citric Acid", "Phenoxyethanol", "Ethylhexylglycerin", "Niacinamide", "Butylene Glycol", "Glycereth-26", "Zinc PCA", "Sarcosine",
+  "Propanediol", " Pentylene Glycol", "Xanthan Gum"
+];
 
 const List<String> areas = [
   "szemkörnyék", "száj", "arc, a szemek és száj kivételével"
@@ -75,5 +78,3 @@ const List<String> areas = [
 const blank = SizedBox(
 height: 10,
 );
-
-//bgxvzlbckrlhaj@candassociates.com
